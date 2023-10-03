@@ -1,5 +1,5 @@
-#include <cstdio>
 #include <qmg.hpp>
+#include <iostream>
 
 long int getFileSize(const char *filename) {
     FILE *file = fopen(filename, "rb");
@@ -33,21 +33,21 @@ int main() {
     loadLibrary();
     const char* exampleQmg = "../examples/example.qmg";
     int version = QmageDecCommon_GetVersion();
-    printf("QmageDecoder version: %d\n", version);
+    std::cout << "QmageDecoder version:" << version "\n";
     int opaqueInfo = QmageDecCommon_GetOpaqueInfo(exampleQmg);
-    printf("QmageDecoder opaqueInfo: %d\n", opaqueInfo);
+    std::cout << "QmageDecoder opaqueInfo:" << opaqueInfo "\n";
     long int input_size = getFileSize(exampleQmg);
     QmageDecoderInfo decoderInfo{};
     QM_BOOL hasDecoderInfo = QmageDecCommon_GetDecoderInfo(exampleQmg, 16, &decoderInfo);
     if (hasDecoderInfo) {
-        printf("DecoderInfo mode: %d\n", decoderInfo.mode);
-        printf("DecoderInfo bpp: %d\n", decoderInfo.imageInfo.bpp);
+        std::cout << "DecoderInfo mode: " << decoderInfo.mode << "\n";
+        std::cout << "DecoderInfo bpp: " << decoderInfo.imageInfo.bpp << "\n";
     }
     QmageDecoderHeader headerInfo{};
     QM_BOOL hasHeaderInfo = QmageDecCommon_ParseHeader(exampleQmg, QM_IO_FILE, 16, &headerInfo);
     if (hasHeaderInfo) {
-        printf("HeaderInfo width: %d\n", headerInfo.width);
-        printf("HeaderInfo height: %d\n", headerInfo.height);
+        std::cout << "HeaderInfo width: " << headerInfo.width << "\n";
+        std::cout << "HeaderInfo height: " << headerInfo.height << "\n";
     }
     unloadLibrary();
 
