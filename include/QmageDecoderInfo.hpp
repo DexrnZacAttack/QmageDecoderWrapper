@@ -1,3 +1,5 @@
+#include <qmg.hpp>
+
 struct QmageDecoderInfo {
     QmageImageInfo imageInfo;
     QMINT32 header_len;
