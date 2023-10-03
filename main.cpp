@@ -30,19 +30,24 @@ long int getFileSize(const char *filename) {
 // To the poor soul who looks at this
 // I do not know C/C++ in my defense
 int main(void) {
-    printf("WE ARE SO FUCKING BALL!\n");    
-
     loadLibrary();
     const char* exampleQmg = "../examples/example.qmg";
     int version = QmageDecCommon_GetVersion();
     printf("QmageDecoder version: %d\n", version);
     int opaqueInfo = QmageDecCommon_GetOpaqueInfo(exampleQmg);
     printf("QmageDecoder opaqueInfo: %d\n", opaqueInfo);
+    long int input_size = getFileSize(exampleQmg);
     QmageDecoderInfo decoderInfo{};
-    QM_BOOL hasDecoderInfo = QmageDecCommon_GetDecoderInfo(exampleQmg, getFileSize(exampleQmg), &decoderInfo);
+    QM_BOOL hasDecoderInfo = QmageDecCommon_GetDecoderInfo(exampleQmg, input_size, &decoderInfo);
     if (hasDecoderInfo) {
         printf("DecoderInfo mode: %d\n", decoderInfo.mode);
         printf("DecoderInfo bpp: %d\n", decoderInfo.imageInfo.bpp);
+    }
+    QmageDecoderHeader headerInfo{};
+    QM_BOOL hasHeaderInfo = QmageDecCommon_ParseHeader(exampleQmg, QM_IO_FILE, input_size, &headerInfo);
+    if (hasHeaderInfo) {
+        printf("HeaderInfo width: %d\n", headerInfo.width);
+        printf("HeaderInfo height: %d\n", headerInfo.height);
     }
     unloadLibrary();
 

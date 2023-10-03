@@ -5,18 +5,20 @@
 #include <dlfcn.h>
 
 // switch this to typedef when i understand c/c++
-#define QMULONG long
+#define QMULONG unsigned long
+#define QMLONG long
 #define QMINT32 int
 #define QMUINT32 unsigned int
 // fix this type
 #define QMUCHAR const char
 #define QMCHAR const char
-enum QM_BOOL {
-    QM_BOOL_FALSE,
-    QM_BOOL_TRUE
+enum QM_BOOL : int32_t {
+  QM_BOOL_FALSE = 0x0,
+  QM_BOOL_TRUE = 0x1,
 };
 typedef void QmageDecAniInfo;
 
+#include <quram.hpp>
 #include <QmageNinePatchedChunk.hpp>
 #include <QmageRawImageType.hpp>
 #include <QmageIOType.hpp>
