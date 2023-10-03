@@ -1,0 +1,955 @@
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              DYN (Shared object file)
+  Machine:                           ARM
+  Version:                           0x1
+  Entry point address:               0x1494
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          463740 (bytes into file)
+  Flags:                             0x5000002, Version5 EABI, <unknown>
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         4
+  Size of section headers:           40 (bytes)
+  Number of section headers:         29
+  Section header string table index: 26
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .hash             HASH            000000b4 0000b4 00033c 04   A  2   0  4
+  [ 2] .dynsym           DYNSYM          000003f0 0003f0 0006c0 10   A  3   3  4
+  [ 3] .dynstr           STRTAB          00000ab0 000ab0 00085d 00   A  0   0  1
+  [ 4] .rel.dyn          REL             00001310 001310 000058 08   A  2   0  4
+  [ 5] .rel.plt          REL             00001368 001368 000070 08   A  2   6  4
+  [ 6] .plt              PROGBITS        000013d8 0013d8 0000bc 04  AX  0   0  4
+  [ 7] .text             PROGBITS        00001494 001494 02dc44 00  AX  0   0  4
+  [ 8] .rodata           PROGBITS        0002f0d8 02f0d8 000208 00   A  0   0  8
+  [ 9] .ARM.extab        PROGBITS        0002f2e0 02f2e0 000000 00   A  0   0  1
+  [10] .ARM.exidx        ARM_EXIDX       0002f2e0 02f2e0 000220 00  AL  7   0  4
+  [11] .dynamic          DYNAMIC         00030000 030000 0000b8 08  WA  3   0  4
+  [12] .got              PROGBITS        000300b8 0300b8 000070 04  WA  0   0  4
+  [13] .data             PROGBITS        00030128 030128 00a3d0 00  WA  0   0  4
+  [14] .bss              NOBITS          0003a4f8 03a4f8 0047a4 00  WA  0   0  4
+  [15] .comment          PROGBITS        00000000 03a4f8 00007e 00      0   0  1
+  [16] .debug_aranges    PROGBITS        00000000 03a576 0002b0 00      0   0  1
+  [17] .debug_pubnames   PROGBITS        00000000 03a826 00091d 00      0   0  1
+  [18] .debug_info       PROGBITS        00000000 03b143 005c2d 00      0   0  1
+  [19] .debug_abbrev     PROGBITS        00000000 040d70 000a0a 00      0   0  1
+  [20] .debug_line       PROGBITS        00000000 04177a 01aff0 00      0   0  1
+  [21] .debug_frame      PROGBITS        00000000 05c76c 000900 00      0   0  4
+  [22] .debug_str        PROGBITS        00000000 05d06c 001a4e 01  MS  0   0  1
+  [23] .debug_loc        PROGBITS        00000000 05eaba 012307 00      0   0  1
+  [24] .ARM.attributes   ARM_ATTRIBUTES  00000000 070dc1 000029 00      0   0  1
+  [25] .debug_ranges     PROGBITS        00000000 070dea 000480 00      0   0  1
+  [26] .shstrtab         STRTAB          00000000 07126a 00010f 00      0   0  1
+  [27] .symtab           SYMTAB          00000000 071804 001190 10     28 176  4
+  [28] .strtab           STRTAB          00000000 072994 000a1e 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), y (purecode), p (processor specific)
+
+There are no section groups in this file.
+
+Program Headers:
+  Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+  EXIDX          0x02f2e0 0x0002f2e0 0x0002f2e0 0x00220 0x00220 R   0x4
+  LOAD           0x000000 0x00000000 0x00000000 0x2f500 0x2f500 R E 0x1000
+  LOAD           0x030000 0x00030000 0x00030000 0x0a4f8 0x0ec9c RW  0x1000
+  DYNAMIC        0x030000 0x00030000 0x00030000 0x000b8 0x000b8 RW  0x4
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     .ARM.extab .ARM.exidx 
+   01     .hash .dynsym .dynstr .rel.dyn .rel.plt .plt .text .rodata .ARM.extab .ARM.exidx 
+   02     .dynamic .got .data .bss 
+   03     .dynamic 
+
+Dynamic section at offset 0x30000 contains 19 entries:
+  Tag        Type                         Name/Value
+ 0x00000001 (NEEDED)                     Shared library: [libc.so]
+ 0x00000001 (NEEDED)                     Shared library: [libstdc++.so]
+ 0x00000001 (NEEDED)                     Shared library: [libm.so]
+ 0x0000000e (SONAME)                     Library soname: [libQmageDecoder.so]
+ 0x00000010 (SYMBOLIC)                   0x0
+ 0x00000004 (HASH)                       0xb4
+ 0x00000005 (STRTAB)                     0xab0
+ 0x00000006 (SYMTAB)                     0x3f0
+ 0x0000000a (STRSZ)                      2141 (bytes)
+ 0x0000000b (SYMENT)                     16 (bytes)
+ 0x00000003 (PLTGOT)                     0x300b8
+ 0x00000002 (PLTRELSZ)                   112 (bytes)
+ 0x00000014 (PLTREL)                     REL
+ 0x00000017 (JMPREL)                     0x1368
+ 0x00000011 (REL)                        0x1310
+ 0x00000012 (RELSZ)                      88 (bytes)
+ 0x00000013 (RELENT)                     8 (bytes)
+ 0x6ffffffa (RELCOUNT)                   10
+ 0x00000000 (NULL)                       0x0
+
+Relocation section '.rel.dyn' at offset 0x1310 contains 11 entries:
+ Offset     Info    Type            Sym.Value  Sym. Name
+00030100  00000017 R_ARM_RELATIVE   
+00030104  00000017 R_ARM_RELATIVE   
+00030108  00000017 R_ARM_RELATIVE   
+0003010c  00000017 R_ARM_RELATIVE   
+00030110  00000017 R_ARM_RELATIVE   
+00030114  00000017 R_ARM_RELATIVE   
+00030118  00000017 R_ARM_RELATIVE   
+0003011c  00000017 R_ARM_RELATIVE   
+00030120  00000017 R_ARM_RELATIVE   
+00030124  00000017 R_ARM_RELATIVE   
+000300fc  00000c15 R_ARM_GLOB_DAT    00000000   __stack_chk_guard
+
+Relocation section '.rel.plt' at offset 0x1368 contains 14 entries:
+ Offset     Info    Type            Sym.Value  Sym. Name
+000300c4  00000816 R_ARM_JUMP_SLOT   00000000   memmove
+000300c8  00001816 R_ARM_JUMP_SLOT   00000000   memcpy
+000300cc  00001c16 R_ARM_JUMP_SLOT   00000000   malloc
+000300d0  00002516 R_ARM_JUMP_SLOT   00000000   __stack_chk_fail
+000300d4  00002a16 R_ARM_JUMP_SLOT   00000000   calloc
+000300d8  00003216 R_ARM_JUMP_SLOT   00000000   fseek
+000300dc  00003b16 R_ARM_JUMP_SLOT   00000000   realloc
+000300e0  00003e16 R_ARM_JUMP_SLOT   00000000   fread
+000300e4  00004116 R_ARM_JUMP_SLOT   00000000   fopen
+000300e8  00004316 R_ARM_JUMP_SLOT   00000000   memset
+000300ec  00004516 R_ARM_JUMP_SLOT   00000000   ftell
+000300f0  00004916 R_ARM_JUMP_SLOT   00000000   fclose
+000300f4  00005c16 R_ARM_JUMP_SLOT   00000000   fwrite
+000300f8  00006a16 R_ARM_JUMP_SLOT   00000000   free
+
+Unwind section '.ARM.exidx' at offset 0x2f2e0 contains 68 entries:
+
+0x1494 <QmageDecGetLastErr>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x14b4 <QmageDecOrgOpaqueInfo>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x14b8 <QmageDecGetNinePatchedInfo>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x1510 <QmageMakeColorTable>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x1530 <QmageDecVersionCheck>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x1534 <QmageDecGetVersion>: 0x80a8b0b0
+  Compact model index: 0
+  0xa8      pop {r4, r14}
+  0xb0      finish
+  0xb0      finish
+
+0x1548 <QmageDecParseHeader>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x154c <QmageDecDestroyAniInfo>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x1550 <QmageDecCreateAniInfo>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x1554 <QmageDecodeAniFrame>: 0x8035aab0
+  Compact model index: 0
+  0x35      vsp = vsp + 216
+  0xaa      pop {r4, r5, r6, r14}
+  0xb0      finish
+
+0x15b0 <QmageDecodeFrame>: 0x8036abb0
+  Compact model index: 0
+  0x36      vsp = vsp + 220
+  0xab      pop {r4, r5, r6, r7, r14}
+  0xb0      finish
+
+0x1688 <QmagDecCommon_QmageVersion_1_07_05>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x168c <QmageDecCommon_GetVersion>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x1698 <QmageDecCommon_GetOpaqueInfo>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x16a8 <QmageDecCommon_VersionCheck>: 0x80a1b0b0
+  Compact model index: 0
+  0xa1      pop {r4, r5}
+  0xb0      finish
+  0xb0      finish
+
+0x1810 <QmageDecCommon_StillErrorCheck>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x186c <QmageDecCommon_GetVDecoder_CommonVersionInfo>: 0x80a0b0b0
+  Compact model index: 0
+  0xa0      pop {r4}
+  0xb0      finish
+  0xb0      finish
+
+0x1a40 <QmageDecCommon_SetHeaderFromDecoderInfo>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x1acc <QmageDecCommon_CheckBuffer>: 0x80aab0b0
+  Compact model index: 0
+  0xaa      pop {r4, r5, r6, r14}
+  0xb0      finish
+  0xb0      finish
+
+0x1c18 <QmageDecCommon_SetImageInfo>: 0x80aab0b0
+  Compact model index: 0
+  0xaa      pop {r4, r5, r6, r14}
+  0xb0      finish
+  0xb0      finish
+
+0x1d48 <QmageDecCommon_QGetDecoderInfo>: 0x8001aab0
+  Compact model index: 0
+  0x01      vsp = vsp + 8
+  0xaa      pop {r4, r5, r6, r14}
+  0xb0      finish
+
+0x2164 <QmageDecCommon_MakeColorTable>: 0x8038a9b0
+  Compact model index: 0
+  0x38      vsp = vsp + 228
+  0xa9      pop {r4, r5, r14}
+  0xb0      finish
+
+0x2208 <QmageDecCommon_DecGetNinePatchedInfo>: 0x8038abb0
+  Compact model index: 0
+  0x38      vsp = vsp + 228
+  0xab      pop {r4, r5, r6, r7, r14}
+  0xb0      finish
+
+0x22d8 <QmageDecCommon_WGetDecoderInfo>: 0x80aab0b0
+  Compact model index: 0
+  0xaa      pop {r4, r5, r6, r14}
+  0xb0      finish
+  0xb0      finish
+
+0x2458 <QmageDecCommon_FGetDecoderInfo>: 0x80aab0b0
+  Compact model index: 0
+  0xaa      pop {r4, r5, r6, r14}
+  0xb0      finish
+  0xb0      finish
+
+0x2580 <QmageDecCommon_VGetDecoderInfo>: 0x80acb0b0
+  Compact model index: 0
+  0xac      pop {r4, r5, r6, r7, r8, r14}
+  0xb0      finish
+  0xb0      finish
+
+0x2b58 <QmageDecCommon_GetAniDecoderInfo>: 0x80acb0b0
+  Compact model index: 0
+  0xac      pop {r4, r5, r6, r7, r8, r14}
+  0xb0      finish
+  0xb0      finish
+
+0x2c5c <QmageDecCommon_GetDecoderInfo>: 0x80acb0b0
+  Compact model index: 0
+  0xac      pop {r4, r5, r6, r7, r8, r14}
+  0xb0      finish
+  0xb0      finish
+
+0x2d2c <QmageDecCommon_ParseHeader>: 0x80043faf
+  Compact model index: 0
+  0x04      vsp = vsp + 20
+  0x3f      vsp = vsp + 256
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+
+0x3004 <QmageDecCommon_DestroyAniInfo>: 0x80aab0b0
+  Compact model index: 0
+  0xaa      pop {r4, r5, r6, r14}
+  0xb0      finish
+  0xb0      finish
+
+0x3084 <QmageDecCommon_CreateAniInfo>: 0x801cafb0
+  Compact model index: 0
+  0x1c      vsp = vsp + 116
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+  0xb0      finish
+
+0x335c <__QM1st_decode>: 0x8015a701
+  Compact model index: 0
+  0x15      vsp = vsp + 88
+  0xa7      pop {r4, r5, r6, r7, r8, r9, r10, r11}
+  0x01      vsp = vsp + 8
+
+0x37c4 <__QM1st_decode_old>: 0x8013a701
+  Compact model index: 0
+  0x13      vsp = vsp + 80
+  0xa7      pop {r4, r5, r6, r7, r8, r9, r10, r11}
+  0x01      vsp = vsp + 8
+
+0x3c28 <PVcodecDecoder_32bits_global_table>: 0x803ba7b0
+  Compact model index: 0
+  0x3b      vsp = vsp + 240
+  0xa7      pop {r4, r5, r6, r7, r8, r9, r10, r11}
+  0xb0      finish
+
+0x6770 <PVcodecDecoder_32bits_global_table_lossless>: 0x8037a7b0
+  Compact model index: 0
+  0x37      vsp = vsp + 224
+  0xa7      pop {r4, r5, r6, r7, r8, r9, r10, r11}
+  0xb0      finish
+
+0x8ae4 <__QM_SLV_v5_decode>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x8aec <__QM_SLV_v3_decode>: 0x8003a7b0
+  Compact model index: 0
+  0x03      vsp = vsp + 16
+  0xa7      pop {r4, r5, r6, r7, r8, r9, r10, r11}
+  0xb0      finish
+
+0x91c4 <__QVDecoder>: 0x8005a7b0
+  Compact model index: 0
+  0x05      vsp = vsp + 24
+  0xa7      pop {r4, r5, r6, r7, r8, r9, r10, r11}
+  0xb0      finish
+
+0x93d4 <PVcodecDecoder_24bits>: 0x80003faf
+  Compact model index: 0
+  0x00      vsp = vsp + 4
+  0x3f      vsp = vsp + 256
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+
+0xc5e4 <PVcodecDecoder_24bits_ARGB>: 0x80003faf
+  Compact model index: 0
+  0x00      vsp = vsp + 4
+  0x3f      vsp = vsp + 256
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+
+0xf998 <PVcodecDecoder_32bits_local_table>: 0x80003faf
+  Compact model index: 0
+  0x00      vsp = vsp + 4
+  0x3f      vsp = vsp + 256
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+
+0x12620 <PVcodecDecoder>: 0x80a0b0b0
+  Compact model index: 0
+  0xa0      pop {r4}
+  0xb0      finish
+  0xb0      finish
+
+0x126a8 <__QM_WCodec_2nd_decode>: 0x8008afb0
+  Compact model index: 0
+  0x08      vsp = vsp + 36
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+  0xb0      finish
+
+0x13150 <__QM_WCodec_1st_decode>: 0x8008abb0
+  Compact model index: 0
+  0x08      vsp = vsp + 36
+  0xab      pop {r4, r5, r6, r7, r14}
+  0xb0      finish
+
+0x131f8 <__QM_WCodec_decode>: 0x8001aeb0
+  Compact model index: 0
+  0x01      vsp = vsp + 8
+  0xae      pop {r4, r5, r6, r7, r8, r9, r10, r14}
+  0xb0      finish
+
+0x133ac <Qmage_WDecodeFrame_Low>: 0x8004afb0
+  Compact model index: 0
+  0x04      vsp = vsp + 20
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+  0xb0      finish
+
+0x13bac <__QM_DecodeOneFrame_A9LL_TINY>: 0x80043faf
+  Compact model index: 0
+  0x04      vsp = vsp + 20
+  0x3f      vsp = vsp + 256
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+
+0x18b24 <__QM_DecodeOneFrame_A9LL_alpha>: 0x803eafb0
+  Compact model index: 0
+  0x3e      vsp = vsp + 252
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+  0xb0      finish
+
+0x1b5fc <__QM_DecodeOneFrame_OutputHandling>: 0x8018afb0
+  Compact model index: 0
+  0x18      vsp = vsp + 100
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+  0xb0      finish
+
+0x1d958 <__QM_DecodeOneFrame_A9LL_ani_alpha>: 0x80243faf
+  Compact model index: 0
+  0x24      vsp = vsp + 148
+  0x3f      vsp = vsp + 256
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+
+0x23cb4 <__QM_DecodeOneFrame_A9LL_ani>: 0x802c3faf
+  Compact model index: 0
+  0x2c      vsp = vsp + 180
+  0x3f      vsp = vsp + 256
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+
+0x2a0bc <__QM_DecodeOneFrame_A9LL>: 0x80b246af
+  Compact model index: 0
+  0xb2 0x46 vsp = vsp + 796
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+
+0x2e714 <Qmage_VDecodeFrame_Low>: 0x8001aeb0
+  Compact model index: 0
+  0x01      vsp = vsp + 8
+  0xae      pop {r4, r5, r6, r7, r8, r9, r10, r14}
+  0xb0      finish
+
+0x2e9f4 <Qmage_VDecodeAniFrame_Low>: 0x8002afb0
+  Compact model index: 0
+  0x02      vsp = vsp + 12
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14}
+  0xb0      finish
+
+0x2ed44 <Qmage_FDecodeFrame_Low>: 0x8001a7b0
+  Compact model index: 0
+  0x01      vsp = vsp + 8
+  0xa7      pop {r4, r5, r6, r7, r8, r9, r10, r11}
+  0xb0      finish
+
+0x2f0a4 <QuramQmage_Fwrite>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x2f0a8 <QuramQmage_Fread>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x2f0ac <QuramQmage_Ftell>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x2f0b0 <QuramQmage_Fseek>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x2f0b4 <QuramQmage_Fclose>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x2f0b8 <QuramQmage_Fopen>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x2f0bc <QuramQmage_Memset>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x2f0c0 <QuramQmage_Memcpy>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x2f0c4 <QuramQmage_ReAlloc>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x2f0c8 <QuramQmage_Calloc>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x2f0cc <QuramQmage_Memmove>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x2f0d0 <QuramQmage_Free>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+0x2f0d4 <QuramQmage_Malloc>: 0x80b0b0b0
+  Compact model index: 0
+  0xb0      finish
+  0xb0      finish
+  0xb0      finish
+
+
+Symbol table '.dynsym' contains 108 entries:
+   Num:    Value  Size Type    Bind   Vis      Ndx Name
+     0: 00000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 00001494     0 SECTION LOCAL  DEFAULT    7 .text
+     2: 00030128     0 SECTION LOCAL  DEFAULT   13 .data
+     3: 00001698    16 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_G[...]
+     4: 0002f0b0     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Fseek
+     5: 00002164   164 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_M[...]
+     6: 0002a0bc 18008 FUNC    GLOBAL DEFAULT    7 __QM_DecodeOneFr[...]
+     7: 000037c4  1124 FUNC    GLOBAL DEFAULT    7 __QM1st_decode_old
+     8: 00000000     0 FUNC    GLOBAL DEFAULT  UND memmove
+     9: 00008aec  1752 FUNC    GLOBAL DEFAULT    7 __QM_SLV_v3_decode
+    10: 0002f500     0 NOTYPE  GLOBAL DEFAULT  ABS __exidx_end
+    11: 0002f0d0     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Free
+    12: 00000000     0 OBJECT  GLOBAL DEFAULT  UND __stack_chk_guard
+    13: 00000000     0 FUNC    GLOBAL DEFAULT  UND __aeabi_unwind_c[...]
+    14: 000390e0  2060 OBJECT  GLOBAL DEFAULT   13 Qmage_ori_deltaR[...]
+    15: 0003ec9c     0 NOTYPE  GLOBAL DEFAULT  ABS _bss_end__
+    16: 00002b58   260 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_G[...]
+    17: 0002f0c8     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Calloc
+    18: 0003e484     4 OBJECT  GLOBAL DEFAULT   14 pQmage_deltaRGB_[...]
+    19: 0002f0a8     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Fread
+    20: 0000f998 11400 FUNC    GLOBAL DEFAULT    7 PVcodecDecoder_3[...]
+    21: 0002f0d4     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Malloc
+    22: 00002c5c   208 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_G[...]
+    23: 000133ac  2048 FUNC    GLOBAL DEFAULT    7 Qmage_WDecodeFra[...]
+    24: 00000000     0 FUNC    GLOBAL DEFAULT  UND memcpy
+    25: 00001550     4 FUNC    GLOBAL DEFAULT    7 QmageDecCreateAniInfo
+    26: 0000168c    12 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_G[...]
+    27: 000380c8  2060 OBJECT  GLOBAL DEFAULT   13 Qmage_deltaRGB_RGB121
+    28: 00000000     0 FUNC    GLOBAL DEFAULT  UND malloc
+    29: 0003e488     4 OBJECT  GLOBAL DEFAULT   14 pQmage_ori_deltaRGB
+    30: 0000186c   468 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_G[...]
+    31: 0003a4f8     0 NOTYPE  GLOBAL DEFAULT  ABS __bss_start__
+    32: 000388d4  2060 OBJECT  GLOBAL DEFAULT   13 Qmage_ori_deltaRGB
+    33: 000016a8   360 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_V[...]
+    34: 00001534    20 FUNC    GLOBAL DEFAULT    7 QmageDecGetVersion
+    35: 00001548     4 FUNC    GLOBAL DEFAULT    7 QmageDecParseHeader
+    36: 0002f2e0     0 NOTYPE  GLOBAL DEFAULT  ABS __exidx_start
+    37: 00000000     0 FUNC    GLOBAL DEFAULT  UND __stack_chk_fail
+    38: 00001530     4 FUNC    GLOBAL DEFAULT    7 QmageDecVersionCheck
+    39: 00003c28 11080 FUNC    GLOBAL DEFAULT    7 PVcodecDecoder_3[...]
+    40: 00001a40   140 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_S[...]
+    41: 00002580  1496 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_V[...]
+    42: 00000000     0 FUNC    GLOBAL DEFAULT  UND calloc
+    43: 000091c4   528 FUNC    GLOBAL DEFAULT    7 __QVDecoder
+    44: 0002f0ac     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Ftell
+    45: 0000335c  1128 FUNC    GLOBAL DEFAULT    7 __QM1st_decode
+    46: 00006770  9076 FUNC    GLOBAL DEFAULT    7 PVcodecDecoder_3[...]
+    47: 0001b5fc  9052 FUNC    GLOBAL DEFAULT    7 __QM_DecodeOneFr[...]
+    48: 0002ed44   864 FUNC    GLOBAL DEFAULT    7 Qmage_FDecodeFra[...]
+    49: 0002f0b8     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Fopen
+    50: 00000000     0 FUNC    GLOBAL DEFAULT  UND fseek
+    51: 0002f0b4     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Fclose
+    52: 0002e714   736 FUNC    GLOBAL DEFAULT    7 Qmage_VDecodeFra[...]
+    53: 0003ec9c     0 NOTYPE  GLOBAL DEFAULT  ABS __bss_end__
+    54: 00002458   296 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_F[...]
+    55: 000015b0   216 FUNC    GLOBAL DEFAULT    7 QmageDecodeFrame
+    56: 0002f0bc     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Memset
+    57: 0002e9f4   848 FUNC    GLOBAL DEFAULT    7 Qmage_VDecodeAni[...]
+    58: 00013150   168 FUNC    GLOBAL DEFAULT    7 __QM_WCodec_1st_[...]
+    59: 00000000     0 FUNC    GLOBAL DEFAULT  UND realloc
+    60: 000093d4 12816 FUNC    GLOBAL DEFAULT    7 PVcodecDecoder_24bits
+    61: 000126a8  2728 FUNC    GLOBAL DEFAULT    7 __QM_WCodec_2nd_[...]
+    62: 00000000     0 FUNC    GLOBAL DEFAULT  UND fread
+    63: 0000c5e4 13236 FUNC    GLOBAL DEFAULT    7 PVcodecDecoder_2[...]
+    64: 00003004   128 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_D[...]
+    65: 00000000     0 FUNC    GLOBAL DEFAULT  UND fopen
+    66: 0003a4f8     0 NOTYPE  GLOBAL DEFAULT  ABS __bss_start
+    67: 00000000     0 FUNC    GLOBAL DEFAULT  UND memset
+    68: 00012620   136 FUNC    GLOBAL DEFAULT    7 PVcodecDecoder
+    69: 00000000     0 FUNC    GLOBAL DEFAULT  UND ftell
+    70: 00018b24 10968 FUNC    GLOBAL DEFAULT    7 __QM_DecodeOneFr[...]
+    71: 00023cb4 25608 FUNC    GLOBAL DEFAULT    7 __QM_DecodeOneFr[...]
+    72: 0003e480     4 OBJECT  GLOBAL DEFAULT   14 debug_QmageDecError
+    73: 00000000     0 FUNC    GLOBAL DEFAULT  UND fclose
+    74: 00008ae4     8 FUNC    GLOBAL DEFAULT    7 __QM_SLV_v5_decode
+    75: 0003ec9c     0 NOTYPE  GLOBAL DEFAULT  ABS __end__
+    76: 0002f0c0     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Memcpy
+    77: 00003084   728 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_C[...]
+    78: 0002f0cc     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Memmove
+    79: 0002f0c4     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_ReAlloc
+    80: 00001554    92 FUNC    GLOBAL DEFAULT    7 QmageDecodeAniFrame
+    81: 00002208   208 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_D[...]
+    82: 00001494    32 FUNC    GLOBAL DEFAULT    7 QmageDecGetLastErr
+    83: 00001510    32 FUNC    GLOBAL DEFAULT    7 QmageMakeColorTable
+    84: 0002f0a4     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Fwrite
+    85: 000131f8   436 FUNC    GLOBAL DEFAULT    7 __QM_WCodec_decode
+    86: 000022d8   384 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_W[...]
+    87: 0003e48c     4 OBJECT  GLOBAL DEFAULT   14 pQmage_ori_delta[...]
+    88: 000398ec  1036 OBJECT  GLOBAL DEFAULT   13 Qmage_ori_deltaR[...]
+    89: 000014b4     4 FUNC    GLOBAL DEFAULT    7 QmageDecOrgOpaqueInfo
+    90: 00001810    92 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_S[...]
+    91: 00001688     4 FUNC    GLOBAL DEFAULT    7 QmagDecCommon_Qm[...]
+    92: 00000000     0 FUNC    GLOBAL DEFAULT  UND fwrite
+    93: 0003a4f8     0 NOTYPE  GLOBAL DEFAULT  ABS _edata
+    94: 0003ec9c     0 NOTYPE  GLOBAL DEFAULT  ABS _end
+    95: 00001d48  1052 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_Q[...]
+    96: 00013bac 20344 FUNC    GLOBAL DEFAULT    7 __QM_DecodeOneFr[...]
+    97: 0001d958 25436 FUNC    GLOBAL DEFAULT    7 __QM_DecodeOneFr[...]
+    98: 00001acc   332 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_C[...]
+    99: 000014b8    88 FUNC    GLOBAL DEFAULT    7 QmageDecGetNineP[...]
+   100: 00039cf8  2048 OBJECT  GLOBAL DEFAULT   13 QURAM_FDEC_TABLE
+   101: 00080000     0 NOTYPE  GLOBAL DEFAULT  ABS _stack
+   102: 00030128     0 NOTYPE  GLOBAL DEFAULT   13 __data_start
+   103: 00001c18   304 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_S[...]
+   104: 00002d2c   728 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_P[...]
+   105: 0000154c     4 FUNC    GLOBAL DEFAULT    7 QmageDecDestroyA[...]
+   106: 00000000     0 FUNC    GLOBAL DEFAULT  UND free
+   107: 0003e490  2060 OBJECT  GLOBAL DEFAULT   14 Qmage_ori_deltaR[...]
+
+Symbol table '.symtab' contains 281 entries:
+   Num:    Value  Size Type    Bind   Vis      Ndx Name
+     0: 00000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 000000b4     0 SECTION LOCAL  DEFAULT    1 .hash
+     2: 000003f0     0 SECTION LOCAL  DEFAULT    2 .dynsym
+     3: 00000ab0     0 SECTION LOCAL  DEFAULT    3 .dynstr
+     4: 00001310     0 SECTION LOCAL  DEFAULT    4 .rel.dyn
+     5: 00001368     0 SECTION LOCAL  DEFAULT    5 .rel.plt
+     6: 000013d8     0 SECTION LOCAL  DEFAULT    6 .plt
+     7: 00001494     0 SECTION LOCAL  DEFAULT    7 .text
+     8: 0002f0d8     0 SECTION LOCAL  DEFAULT    8 .rodata
+     9: 0002f2e0     0 SECTION LOCAL  DEFAULT    9 .ARM.extab
+    10: 0002f2e0     0 SECTION LOCAL  DEFAULT   10 .ARM.exidx
+    11: 00030000     0 SECTION LOCAL  DEFAULT   11 .dynamic
+    12: 000300b8     0 SECTION LOCAL  DEFAULT   12 .got
+    13: 00030128     0 SECTION LOCAL  DEFAULT   13 .data
+    14: 0003a4f8     0 SECTION LOCAL  DEFAULT   14 .bss
+    15: 00000000     0 SECTION LOCAL  DEFAULT   15 .comment
+    16: 00000000     0 SECTION LOCAL  DEFAULT   16 .debug_aranges
+    17: 00000000     0 SECTION LOCAL  DEFAULT   17 .debug_pubnames
+    18: 00000000     0 SECTION LOCAL  DEFAULT   18 .debug_info
+    19: 00000000     0 SECTION LOCAL  DEFAULT   19 .debug_abbrev
+    20: 00000000     0 SECTION LOCAL  DEFAULT   20 .debug_line
+    21: 00000000     0 SECTION LOCAL  DEFAULT   21 .debug_frame
+    22: 00000000     0 SECTION LOCAL  DEFAULT   22 .debug_str
+    23: 00000000     0 SECTION LOCAL  DEFAULT   23 .debug_loc
+    24: 00000000     0 SECTION LOCAL  DEFAULT   24 .ARM.attributes
+    25: 00000000     0 SECTION LOCAL  DEFAULT   25 .debug_ranges
+    26: 00000000     0 FILE    LOCAL  DEFAULT  ABS QmageDecoder.c
+    27: 00001494     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    28: 000014ac     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    29: 000014b4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    30: 000014b8     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    31: 00001508     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    32: 00001510     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    33: 00001530     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    34: 00001534     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    35: 00001548     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    36: 0000154c     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    37: 00001550     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    38: 00001554     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    39: 000015b0     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    40: 00000000     0 NOTYPE  LOCAL  DEFAULT   21 $d
+    41: 00000000     0 NOTYPE  LOCAL  DEFAULT   23 $d
+    42: 00000000     0 FILE    LOCAL  DEFAULT  ABS QmageDecCommon.c
+    43: 00001688     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    44: 0000168c     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    45: 00001694     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    46: 00001698     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    47: 000016a8     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    48: 00001800     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    49: 00001810     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    50: 00001864     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    51: 0000186c     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    52: 00001a40     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    53: 00001acc     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    54: 00001c18     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    55: 00001d48     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    56: 0000215c     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    57: 00002164     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    58: 00002208     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    59: 000022d8     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    60: 00002450     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    61: 00002458     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    62: 00002578     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    63: 00002580     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    64: 00002b4c     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    65: 00002b58     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    66: 00002c58     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    67: 00002c5c     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    68: 00002d24     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    69: 00002d2c     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    70: 00002fec     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    71: 00003004     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    72: 00003084     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    73: 0000334c     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    74: 000000f8     0 NOTYPE  LOCAL  DEFAULT   21 $d
+    75: 000002b6     0 NOTYPE  LOCAL  DEFAULT   23 $d
+    76: 00000000     0 FILE    LOCAL  DEFAULT  ABS Qmage_WDecoder_Low.c
+    77: 0000335c     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    78: 000037c4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    79: 00003c28     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    80: 00004a08     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    81: 00004a10     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    82: 00006768     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    83: 00006770     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    84: 00007744     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    85: 0000774c     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    86: 00008ae0     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    87: 00008ae4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    88: 00008aec     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    89: 000091c4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    90: 000093d4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    91: 0000a21c     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    92: 0000a228     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    93: 0000c5e0     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    94: 0000c5e4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    95: 0000d44c     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    96: 0000d458     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    97: 0000f994     0 NOTYPE  LOCAL  DEFAULT    7 $d
+    98: 0000f998     0 NOTYPE  LOCAL  DEFAULT    7 $a
+    99: 0001081c     0 NOTYPE  LOCAL  DEFAULT    7 $d
+   100: 00010824     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   101: 00012620     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   102: 000126a8     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   103: 00013148     0 NOTYPE  LOCAL  DEFAULT    7 $d
+   104: 00013150     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   105: 000131f8     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   106: 000133ac     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   107: 0002f0e0   512 OBJECT  LOCAL  DEFAULT    8 diffTable
+   108: 0002f0e0     0 NOTYPE  LOCAL  DEFAULT    8 $d
+   109: 00030128  2032 OBJECT  LOCAL  DEFAULT   13 GLOBAL_XOR_TABLE[...]
+   110: 00030128     0 NOTYPE  LOCAL  DEFAULT   13 $d
+   111: 00030918  2032 OBJECT  LOCAL  DEFAULT   13 GLOBAL_XOR_TABLE[...]
+   112: 00031108  2032 OBJECT  LOCAL  DEFAULT   13 GLOBAL_XOR_TABLE_ARGB
+   113: 000318f8  2032 OBJECT  LOCAL  DEFAULT   13 GLOBAL_XOR_TABLE_RGBA
+   114: 000320e8  2048 OBJECT  LOCAL  DEFAULT   13 psm_length_argb
+   115: 000328e8  8192 OBJECT  LOCAL  DEFAULT   13 psm_value_argb
+   116: 000348e8  2048 OBJECT  LOCAL  DEFAULT   13 psm_length_rgba
+   117: 000350e8  8192 OBJECT  LOCAL  DEFAULT   13 psm_value_rgba
+   118: 000370e8  2032 OBJECT  LOCAL  DEFAULT   13 GLOBAL_ABS_TABLE
+   119: 000378d8  2032 OBJECT  LOCAL  DEFAULT   13 GLOBAL_ABS_TABLE_NEAR
+   120: 0003a4f8  8132 OBJECT  LOCAL  DEFAULT   14 LOCAL_XOR_TABLE_24
+   121: 0003c4bc  8132 OBJECT  LOCAL  DEFAULT   14 LOCAL_XOR_TABLE
+   122: 00000ca8     0 NOTYPE  LOCAL  DEFAULT   23 $d
+   123: 00000000     0 FILE    LOCAL  DEFAULT  ABS Qmage_VDecoder_Low.c
+   124: 00013bac     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   125: 00014a90     0 NOTYPE  LOCAL  DEFAULT    7 $d
+   126: 00014aa4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   127: 00018b24     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   128: 00019a98     0 NOTYPE  LOCAL  DEFAULT    7 $d
+   129: 00019aac     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   130: 0001b5fc     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   131: 0001d958     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   132: 0001e954     0 NOTYPE  LOCAL  DEFAULT    7 $d
+   133: 0001e95c     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   134: 0002352c     0 NOTYPE  LOCAL  DEFAULT    7 $d
+   135: 00023530     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   136: 00023cb4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   137: 00024ab8     0 NOTYPE  LOCAL  DEFAULT    7 $d
+   138: 00024ad4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   139: 0002a0b0     0 NOTYPE  LOCAL  DEFAULT    7 $d
+   140: 0002a0bc     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   141: 0002a1e4     0 NOTYPE  LOCAL  DEFAULT    7 $d
+   142: 0002a1fc     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   143: 0002e708     0 NOTYPE  LOCAL  DEFAULT    7 $d
+   144: 0002e714     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   145: 0002e9f4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   146: 000380c8     0 NOTYPE  LOCAL  DEFAULT   13 $d
+   147: 00007a56     0 NOTYPE  LOCAL  DEFAULT   23 $d
+   148: 00000000     0 FILE    LOCAL  DEFAULT  ABS Qmage_FDecoder_Low.c
+   149: 0002ed44     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   150: 0002f09c     0 NOTYPE  LOCAL  DEFAULT    7 $d
+   151: 00039cf8     0 NOTYPE  LOCAL  DEFAULT   13 $d
+   152: 00011e70     0 NOTYPE  LOCAL  DEFAULT   23 $d
+   153: 00000000     0 FILE    LOCAL  DEFAULT  ABS QmageInterface.c
+   154: 0002f0a4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   155: 0002f0a8     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   156: 0002f0ac     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   157: 0002f0b0     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   158: 0002f0b4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   159: 0002f0b8     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   160: 0002f0bc     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   161: 0002f0c0     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   162: 0002f0c4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   163: 0002f0c8     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   164: 0002f0cc     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   165: 0002f0d0     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   166: 0002f0d4     0 NOTYPE  LOCAL  DEFAULT    7 $a
+   167: 00000820     0 NOTYPE  LOCAL  DEFAULT   21 $d
+   168: 000120cd     0 NOTYPE  LOCAL  DEFAULT   23 $d
+   169: 00000000     0 FILE    LOCAL  DEFAULT  ABS Qmage_VDecoder_t[...]
+   170: 000036e7     0 NOTYPE  LOCAL  DEFAULT   18 $d
+   171: 00030000     0 OBJECT  LOCAL  HIDDEN   ABS _DYNAMIC
+   172: 000300b8     0 OBJECT  LOCAL  HIDDEN   ABS _GLOBAL_OFFSET_TABLE_
+   173: 000013d8     0 NOTYPE  LOCAL  DEFAULT    6 $a
+   174: 000013e8     0 NOTYPE  LOCAL  DEFAULT    6 $d
+   175: 000013ec     0 NOTYPE  LOCAL  DEFAULT    6 $a
+   176: 00001698    16 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_G[...]
+   177: 0002f0b0     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Fseek
+   178: 00002164   164 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_M[...]
+   179: 0002a0bc 18008 FUNC    GLOBAL DEFAULT    7 __QM_DecodeOneFr[...]
+   180: 000037c4  1124 FUNC    GLOBAL DEFAULT    7 __QM1st_decode_old
+   181: 00000000     0 FUNC    GLOBAL DEFAULT  UND memmove
+   182: 00008aec  1752 FUNC    GLOBAL DEFAULT    7 __QM_SLV_v3_decode
+   183: 0002f500     0 NOTYPE  GLOBAL DEFAULT  ABS __exidx_end
+   184: 0002f0d0     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Free
+   185: 00000000     0 OBJECT  GLOBAL DEFAULT  UND __stack_chk_guard
+   186: 00000000     0 FUNC    GLOBAL DEFAULT  UND __aeabi_unwind_c[...]
+   187: 000390e0  2060 OBJECT  GLOBAL DEFAULT   13 Qmage_ori_deltaR[...]
+   188: 0003ec9c     0 NOTYPE  GLOBAL DEFAULT  ABS _bss_end__
+   189: 00002b58   260 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_G[...]
+   190: 0002f0c8     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Calloc
+   191: 0003e484     4 OBJECT  GLOBAL DEFAULT   14 pQmage_deltaRGB_[...]
+   192: 0002f0a8     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Fread
+   193: 0000f998 11400 FUNC    GLOBAL DEFAULT    7 PVcodecDecoder_3[...]
+   194: 0002f0d4     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Malloc
+   195: 00002c5c   208 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_G[...]
+   196: 000133ac  2048 FUNC    GLOBAL DEFAULT    7 Qmage_WDecodeFra[...]
+   197: 00000000     0 FUNC    GLOBAL DEFAULT  UND memcpy
+   198: 00001550     4 FUNC    GLOBAL DEFAULT    7 QmageDecCreateAniInfo
+   199: 0000168c    12 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_G[...]
+   200: 000380c8  2060 OBJECT  GLOBAL DEFAULT   13 Qmage_deltaRGB_RGB121
+   201: 00000000     0 FUNC    GLOBAL DEFAULT  UND malloc
+   202: 0003e488     4 OBJECT  GLOBAL DEFAULT   14 pQmage_ori_deltaRGB
+   203: 0000186c   468 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_G[...]
+   204: 0003a4f8     0 NOTYPE  GLOBAL DEFAULT  ABS __bss_start__
+   205: 000388d4  2060 OBJECT  GLOBAL DEFAULT   13 Qmage_ori_deltaRGB
+   206: 000016a8   360 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_V[...]
+   207: 00001534    20 FUNC    GLOBAL DEFAULT    7 QmageDecGetVersion
+   208: 00001548     4 FUNC    GLOBAL DEFAULT    7 QmageDecParseHeader
+   209: 0002f2e0     0 NOTYPE  GLOBAL DEFAULT  ABS __exidx_start
+   210: 00000000     0 FUNC    GLOBAL DEFAULT  UND __stack_chk_fail
+   211: 00001530     4 FUNC    GLOBAL DEFAULT    7 QmageDecVersionCheck
+   212: 00003c28 11080 FUNC    GLOBAL DEFAULT    7 PVcodecDecoder_3[...]
+   213: 00001a40   140 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_S[...]
+   214: 00002580  1496 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_V[...]
+   215: 00000000     0 FUNC    GLOBAL DEFAULT  UND calloc
+   216: 000091c4   528 FUNC    GLOBAL DEFAULT    7 __QVDecoder
+   217: 0002f0ac     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Ftell
+   218: 0000335c  1128 FUNC    GLOBAL DEFAULT    7 __QM1st_decode
+   219: 00006770  9076 FUNC    GLOBAL DEFAULT    7 PVcodecDecoder_3[...]
+   220: 0001b5fc  9052 FUNC    GLOBAL DEFAULT    7 __QM_DecodeOneFr[...]
+   221: 0002ed44   864 FUNC    GLOBAL DEFAULT    7 Qmage_FDecodeFra[...]
+   222: 0002f0b8     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Fopen
+   223: 00000000     0 FUNC    GLOBAL DEFAULT  UND fseek
+   224: 0002f0b4     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Fclose
+   225: 0002e714   736 FUNC    GLOBAL DEFAULT    7 Qmage_VDecodeFra[...]
+   226: 0003ec9c     0 NOTYPE  GLOBAL DEFAULT  ABS __bss_end__
+   227: 00002458   296 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_F[...]
+   228: 000015b0   216 FUNC    GLOBAL DEFAULT    7 QmageDecodeFrame
+   229: 0002f0bc     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Memset
+   230: 0002e9f4   848 FUNC    GLOBAL DEFAULT    7 Qmage_VDecodeAni[...]
+   231: 00013150   168 FUNC    GLOBAL DEFAULT    7 __QM_WCodec_1st_[...]
+   232: 00000000     0 FUNC    GLOBAL DEFAULT  UND realloc
+   233: 000093d4 12816 FUNC    GLOBAL DEFAULT    7 PVcodecDecoder_24bits
+   234: 000126a8  2728 FUNC    GLOBAL DEFAULT    7 __QM_WCodec_2nd_[...]
+   235: 00000000     0 FUNC    GLOBAL DEFAULT  UND fread
+   236: 0000c5e4 13236 FUNC    GLOBAL DEFAULT    7 PVcodecDecoder_2[...]
+   237: 00003004   128 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_D[...]
+   238: 00000000     0 FUNC    GLOBAL DEFAULT  UND fopen
+   239: 0003a4f8     0 NOTYPE  GLOBAL DEFAULT  ABS __bss_start
+   240: 00000000     0 FUNC    GLOBAL DEFAULT  UND memset
+   241: 00012620   136 FUNC    GLOBAL DEFAULT    7 PVcodecDecoder
+   242: 00000000     0 FUNC    GLOBAL DEFAULT  UND ftell
+   243: 00018b24 10968 FUNC    GLOBAL DEFAULT    7 __QM_DecodeOneFr[...]
+   244: 00023cb4 25608 FUNC    GLOBAL DEFAULT    7 __QM_DecodeOneFr[...]
+   245: 0003e480     4 OBJECT  GLOBAL DEFAULT   14 debug_QmageDecError
+   246: 00000000     0 FUNC    GLOBAL DEFAULT  UND fclose
+   247: 00008ae4     8 FUNC    GLOBAL DEFAULT    7 __QM_SLV_v5_decode
+   248: 0003ec9c     0 NOTYPE  GLOBAL DEFAULT  ABS __end__
+   249: 0002f0c0     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Memcpy
+   250: 00003084   728 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_C[...]
+   251: 0002f0cc     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Memmove
+   252: 0002f0c4     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_ReAlloc
+   253: 00001554    92 FUNC    GLOBAL DEFAULT    7 QmageDecodeAniFrame
+   254: 00002208   208 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_D[...]
+   255: 00001494    32 FUNC    GLOBAL DEFAULT    7 QmageDecGetLastErr
+   256: 00001510    32 FUNC    GLOBAL DEFAULT    7 QmageMakeColorTable
+   257: 0002f0a4     4 FUNC    GLOBAL DEFAULT    7 QuramQmage_Fwrite
+   258: 000131f8   436 FUNC    GLOBAL DEFAULT    7 __QM_WCodec_decode
+   259: 000022d8   384 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_W[...]
+   260: 0003e48c     4 OBJECT  GLOBAL DEFAULT   14 pQmage_ori_delta[...]
+   261: 000398ec  1036 OBJECT  GLOBAL DEFAULT   13 Qmage_ori_deltaR[...]
+   262: 000014b4     4 FUNC    GLOBAL DEFAULT    7 QmageDecOrgOpaqueInfo
+   263: 00001810    92 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_S[...]
+   264: 00001688     4 FUNC    GLOBAL DEFAULT    7 QmagDecCommon_Qm[...]
+   265: 00000000     0 FUNC    GLOBAL DEFAULT  UND fwrite
+   266: 0003a4f8     0 NOTYPE  GLOBAL DEFAULT  ABS _edata
+   267: 0003ec9c     0 NOTYPE  GLOBAL DEFAULT  ABS _end
+   268: 00001d48  1052 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_Q[...]
+   269: 00013bac 20344 FUNC    GLOBAL DEFAULT    7 __QM_DecodeOneFr[...]
+   270: 0001d958 25436 FUNC    GLOBAL DEFAULT    7 __QM_DecodeOneFr[...]
+   271: 00001acc   332 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_C[...]
+   272: 000014b8    88 FUNC    GLOBAL DEFAULT    7 QmageDecGetNineP[...]
+   273: 00039cf8  2048 OBJECT  GLOBAL DEFAULT   13 QURAM_FDEC_TABLE
+   274: 00080000     0 NOTYPE  GLOBAL DEFAULT  ABS _stack
+   275: 00030128     0 NOTYPE  GLOBAL DEFAULT   13 __data_start
+   276: 00001c18   304 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_S[...]
+   277: 00002d2c   728 FUNC    GLOBAL DEFAULT    7 QmageDecCommon_P[...]
+   278: 0000154c     4 FUNC    GLOBAL DEFAULT    7 QmageDecDestroyA[...]
+   279: 00000000     0 FUNC    GLOBAL DEFAULT  UND free
+   280: 0003e490  2060 OBJECT  GLOBAL DEFAULT   14 Qmage_ori_deltaR[...]
+
+Histogram for bucket list length (total of 97 buckets):
+ Length  Number     % of total  Coverage
+      0  30         ( 30.9%)
+      1  42         ( 43.3%)     40.0%
+      2  16         ( 16.5%)     70.5%
+      3  6          (  6.2%)     87.6%
+      4  2          (  2.1%)     95.2%
+      5  1          (  1.0%)    100.0%
+
+No version information found in this file.
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "5TE"
+  Tag_CPU_arch: v5TE
+  Tag_ARM_ISA_use: Yes
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: int
+  Tag_ABI_optimization_goals: Aggressive Speed
