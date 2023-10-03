@@ -6,12 +6,12 @@
 // I do not know C/C++ in my defense
 int main() {
     loadLibrary();
-    const std::filesystem:path exampleQmg = "../examples/example.qmg";
+    const std::filesystem::path exampleQmg = "../examples/example.qmg";
     
     int version = QmageDecCommon_GetVersion();
-    int opaqueInfo = QmageDecCommon_GetOpaqueInfo(exampleQmg));
-    std::cout << "QmageDecoder version:" << version "\n";
-    std::cout << "QmageDecoder opaqueInfo:" << opaqueInfo "\n";
+    int opaqueInfo = QmageDecCommon_GetOpaqueInfo(exampleQmg.c_str());
+    std::cout << "QmageDecoder version:" << version << "\n";
+    std::cout << "QmageDecoder opaqueInfo:" << opaqueInfo << "\n";
     
     long long int input_size = std::filesystem::file_size(exampleQmg.c_str());
     QmageDecoderInfo decoderInfo{};
