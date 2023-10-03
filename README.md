@@ -3,7 +3,7 @@
 
 
 
-# Contributers
-#### zero_dsrs_vx
-#### Dexrn
-
+## Contributers
+- zero_dsrs_vx
+- Dexrn
+- Boreal
