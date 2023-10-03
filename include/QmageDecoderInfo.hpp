@@ -25,8 +25,7 @@ struct QmageDecoderInfo {
     QMINT32 Animation_NoRepeat;
     QmageDecodeCodecType encoder_mode;
     Qmage_DecderLowInfo DecLowInfo;
-    // this is commented out because fuck you
-    // QmageDecAniInfo *pAniDecInfo;
+    QmageDecAniInfo *pAniDecInfo;
     // Nine patch deez nuts
     QM_BOOL NinePatched;
     QMUCHAR *p9PatchData;
