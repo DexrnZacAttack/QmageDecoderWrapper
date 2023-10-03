@@ -1,13 +1,11 @@
-enum QmageImageType {
-    QM_IMG_TYPE_UNKNOWN,
-    QM_IMG_TYPE_IFG,
-    QM_IMG_TYPE_QMG,
-    QM_IMG_TYPE_QWG,
-    // bitmapppppppppppp all the bpppppppppppppppp
-    QM_IMG_TYPE_BMP,
-    QM_IMG_TYPE_PNG,
-    QM_IMG_TYPE_GIF,
-    // it's jpeg you dumb fuck
-    QM_IMG_TYPE_JPG,
-    QM_IMG_TYPE_RAW
+enum QmageImageType : QMINT32 {
+  QM_IMG_TYPE_UNKNOWN = 0x0,
+  QM_IMG_TYPE_IFG = 0x1,
+  QM_IMG_TYPE_QMG = 0x2,
+  QM_IMG_TYPE_QWG = 0x3,
+  QM_IMG_TYPE_BMP = 0x4,
+  QM_IMG_TYPE_PNG = 0x5,
+  QM_IMG_TYPE_GIF = 0x6,
+  QM_IMG_TYPE_JPG = 0x7,
+  QM_IMG_TYPE_RAW = 0x8,
 };
