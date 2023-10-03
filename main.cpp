@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 #include <qmg.hpp>
 
 long int getFileSize(const char *filename) {
@@ -29,7 +29,7 @@ long int getFileSize(const char *filename) {
 
 // To the poor soul who looks at this
 // I do not know C/C++ in my defense
-int main(void) {
+int main() {
     loadLibrary();
     const char* exampleQmg = "../examples/example.qmg";
     int version = QmageDecCommon_GetVersion();
@@ -38,13 +38,13 @@ int main(void) {
     printf("QmageDecoder opaqueInfo: %d\n", opaqueInfo);
     long int input_size = getFileSize(exampleQmg);
     QmageDecoderInfo decoderInfo{};
-    QM_BOOL hasDecoderInfo = QmageDecCommon_GetDecoderInfo(exampleQmg, input_size, &decoderInfo);
+    QM_BOOL hasDecoderInfo = QmageDecCommon_GetDecoderInfo(exampleQmg, 16, &decoderInfo);
     if (hasDecoderInfo) {
         printf("DecoderInfo mode: %d\n", decoderInfo.mode);
         printf("DecoderInfo bpp: %d\n", decoderInfo.imageInfo.bpp);
     }
     QmageDecoderHeader headerInfo{};
-    QM_BOOL hasHeaderInfo = QmageDecCommon_ParseHeader(exampleQmg, QM_IO_FILE, input_size, &headerInfo);
+    QM_BOOL hasHeaderInfo = QmageDecCommon_ParseHeader(exampleQmg, QM_IO_FILE, 16, &headerInfo);
     if (hasHeaderInfo) {
         printf("HeaderInfo width: %d\n", headerInfo.width);
         printf("HeaderInfo height: %d\n", headerInfo.height);

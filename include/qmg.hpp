@@ -53,38 +53,39 @@ void unloadLibrary(void) {
     }
 }
 
-void initializeFunctions(void) {
+void initializeFunctions() {
     QmageDecCommon_GetVersion = (QmageDecCommon_GetVersionFunc)dlsym(handle, "QmageDecCommon_GetVersion");
-    if (QmageDecCommon_GetVersion == NULL) {
+    if (QmageDecCommon_GetVersion == nullptr) {
         fprintf(stderr, "Unable to get symbol\n");
         unloadLibrary();
     }
     QmageDecCommon_GetOpaqueInfo = (QmageDecCommon_GetOpaqueInfoFunc)dlsym(handle, "QmageDecCommon_GetOpaqueInfo");
-    if (QmageDecCommon_GetOpaqueInfo == NULL) {
+    if (QmageDecCommon_GetOpaqueInfo == nullptr) {
         fprintf(stderr, "Unable to get symbol\n");
         unloadLibrary();
     }
     QmageDecCommon_GetDecoderInfo = (QmageDecCommon_GetDecoderInfoFunc)dlsym(handle, "QmageDecCommon_GetDecoderInfo");
-    if (QmageDecCommon_GetDecoderInfo == NULL) {
+    if (QmageDecCommon_GetDecoderInfo == nullptr) {
         fprintf(stderr, "Unable to get symbol\n");
         unloadLibrary();
     }
     QmageDecCommon_ParseHeader = (QmageDecCommon_ParseHeaderFunc)dlsym(handle, "QmageDecCommon_ParseHeader");
-    if (QmageDecCommon_ParseHeader == NULL) {
+    if (QmageDecCommon_ParseHeader == nullptr) {
         fprintf(stderr, "Unable to get symbol\n");
         unloadLibrary();
     }
     QmageDecCommon_GetAniDecoderInfo = (QmageDecCommon_GetAniDecoderInfoFunc)dlsym(handle, "QmageDecCommon_GetAniDecoderInfo");
-    if (QmageDecCommon_GetAniDecoderInfo == NULL) {
+    if (QmageDecCommon_GetAniDecoderInfo == nullptr) {
         fprintf(stderr, "unable to get symbol\n");
         unloadLibrary();
     }
 }
 
-void loadLibrary(void) {
+void loadLibrary() {
     handle = dlopen("/system/lib/libQmageDecoder.so", RTLD_NOW | RTLD_GLOBAL);
-    if (handle == NULL) {
+    if (handle == nullptr) {
         fprintf(stderr, "Unable to open lib: %s\n", dlerror());
+        exit(-1);
     }
     initializeFunctions();
 }
