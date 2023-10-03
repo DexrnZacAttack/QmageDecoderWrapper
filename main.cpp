@@ -11,13 +11,7 @@ int main(void) {
     printf("QmageDecoder version: %d\n", version);
     int opaqueInfo = QmageDecCommon_GetOpaqueInfo("example.qmg");
     printf("QmageDecoder opaqueInfo: %d\n", opaqueInfo);
-    QMUCHAR* pData = const_cast<QMUCHAR*>("example.qmg");
-    FILE* file = reinterpret_cast<FILE*>(pData);
-    fseek(file, 0, SEEK_END);
-    QMINT32 input_size = ftell(file);
-    fseek(file, 0, SEEK_SET);
-
-    QmageDecCommon_GetDecoderInfo("example.qmg", input_size, );
+    // QmageDecCommon_GetDecoderInfo("example.qmg", input_size, );
     unloadLibrary();
 
     return 0;
