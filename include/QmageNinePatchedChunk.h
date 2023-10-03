@@ -1,4 +1,4 @@
-#include <qmg.hpp>
+#include <qmg.h>
 
 struct QmageNinePatchedChunk {
   QMCHAR name[5];

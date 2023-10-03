@@ -1,4 +1,4 @@
-#include <qmg.hpp>
+#include <qmg.h>
 
 struct QmageDecoderAniInfo {
   QMUCHAR *pPreImage16;

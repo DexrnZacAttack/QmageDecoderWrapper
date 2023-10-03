@@ -1,4 +1,4 @@
-#include <qmg.hpp>
+#include <qmg.h>
 
 enum QmageIOType : QMINT32 {
   QM_IO_FILE = 0x0,

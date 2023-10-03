@@ -18,20 +18,20 @@ enum QM_BOOL : int32_t {
 };
 typedef void QmageDecAniInfo;
 
-#include <quram.hpp>
-#include <QmageNinePatchedChunk.hpp>
-#include <QmageRawImageType.hpp>
-#include <QmageIOType.hpp>
-#include <QmageDecoderHeader.hpp>
-#include <Qmage_DecoderVersion.hpp>
-#include <Qmage_F_DecoderVersion.hpp>
-#include <Qmage_V_DecoderVersion.hpp>
-#include <Qmage_VDecoderVMODE_T.hpp>
-#include <QmageDecodeCodecType.hpp>
-#include <Qmage_DecderLowInfo.hpp>
-#include <QmageImageType.hpp>
-#include <QmageImageInfo.hpp>
-#include <QmageDecoderInfo.hpp>
+#include <quram.h>
+#include <QmageNinePatchedChunk.h>
+#include <QmageRawImageType.h>
+#include <QmageIOType.h>
+#include <QmageDecoderHeader.h>
+#include <Qmage_DecoderVersion.h>
+#include <Qmage_F_DecoderVersion.h>
+#include <Qmage_V_DecoderVersion.h>
+#include <Qmage_VDecoderVMODE_T.h>
+#include <QmageDecodeCodecType.h>
+#include <Qmage_DecderLowInfo.h>
+#include <QmageImageType.h>
+#include <QmageImageInfo.h>
+#include <QmageDecoderInfo.h>
 
 void *handle;
 typedef QMINT32 (*QmageDecCommon_GetVersionFunc)();

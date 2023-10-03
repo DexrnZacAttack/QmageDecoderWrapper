@@ -1,6 +1,6 @@
 #ifndef _QURAM_H
 #define _QURAM_H
-#include <qmg.hpp>
+#include <qmg.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
