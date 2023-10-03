@@ -1,9 +1,9 @@
 # QmageDecoder
-### A project to hopefully decode and convert QMG files.
+#### A project to hopefully decode and convert QMG files.
 
 
 
 # Contributers
-### zero_dsrs_vx
-### Dexrn
+#### zero_dsrs_vx
+#### Dexrn
 
