@@ -6,16 +6,16 @@
 // I do not know C/C++ in my defense
 int main() {
     loadLibrary();
-    const std::string exampleQmg = "../examples/example.qmg";
+    const std::filesystem:path exampleQmg = "../examples/example.qmg";
     
     int version = QmageDecCommon_GetVersion();
-    int opaqueInfo = QmageDecCommon_GetOpaqueInfo(exampleQmg);
+    int opaqueInfo = QmageDecCommon_GetOpaqueInfo(exampleQmg));
     std::cout << "QmageDecoder version:" << version "\n";
     std::cout << "QmageDecoder opaqueInfo:" << opaqueInfo "\n";
     
-    long long int input_size = std::filesystem::file_size(exampleQmg);
+    long long int input_size = std::filesystem::file_size(exampleQmg.c_str());
     QmageDecoderInfo decoderInfo{};
-    QM_BOOL hasDecoderInfo = QmageDecCommon_GetDecoderInfo(exampleQmg, 16, &decoderInfo);
+    QM_BOOL hasDecoderInfo = QmageDecCommon_GetDecoderInfo(exampleQmg.c_str(), 16, &decoderInfo);
     
     if (hasDecoderInfo) {
         std::cout << "DecoderInfo mode: " << decoderInfo.mode << "\n";
@@ -23,7 +23,7 @@ int main() {
     }
     
     QmageDecoderHeader headerInfo{};
-    QM_BOOL hasHeaderInfo = QmageDecCommon_ParseHeader(exampleQmg, QM_IO_FILE, 16, &headerInfo);
+    QM_BOOL hasHeaderInfo = QmageDecCommon_ParseHeader(exampleQmg.c_str(), QM_IO_FILE, 16, &headerInfo);
     
     if (hasHeaderInfo) {
         std::cout << "HeaderInfo width: " << headerInfo.width << "\n";
