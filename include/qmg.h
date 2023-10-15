@@ -132,7 +132,7 @@ void initializeFunctions() {
 }
 
 void loadLibrary() {
-    handle = dlopen("/system/lib/libQmageDecoder.so", RTLD_NOW | RTLD_GLOBAL);
+    handle = dlopen("../lib/libQmageDecoder.so", RTLD_NOW | RTLD_GLOBAL);
     if (handle == nullptr) {
         fprintf(stderr, "Unable to open lib: %s\n", dlerror());
         exit(-1);

@@ -31,6 +31,7 @@ QM_BOOL QmageDecCommon_ParseHeader(QMUCHAR *pInputStream, QmageIOType io_type, Q
         int v12 = pInputStream[1];
         int v13 = pInputStream[0];
         int v14 = (v12 << 8) | v13;
+        std::cout << v12 << " " << v13 << " " << v14 << std::endl;
 
         if (v14 == QM_HEADER)
         {
