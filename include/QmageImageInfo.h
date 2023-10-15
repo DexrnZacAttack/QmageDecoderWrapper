@@ -1,3 +1,5 @@
+#include <qmg.h>
+
 struct QmageImageInfo {
     QMINT32 img_width;
     QMINT32 img_height;

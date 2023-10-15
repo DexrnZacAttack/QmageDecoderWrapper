@@ -32,6 +32,7 @@ typedef void QmageDecAniInfo;
 #include <QmageImageType.h>
 #include <QmageImageInfo.h>
 #include <QmageDecoderInfo.h>
+#include <QmageDecoderError.h>
 
 void *handle;
 typedef QMINT32 (*QmageDecCommon_GetVersionFunc)();
@@ -39,12 +40,18 @@ typedef QMINT32 (*QmageDecCommon_GetOpaqueInfoFunc)(QMUCHAR *pInputStream);
 typedef QM_BOOL (*QmageDecCommon_GetDecoderInfoFunc)(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
 typedef QM_BOOL (*QmageDecCommon_ParseHeaderFunc)(QMUCHAR *pInputStream, QmageIOType io_type, QMINT32 input_size, QmageDecoderHeader *pHeader_info);
 typedef QM_BOOL (*QmageDecCommon_GetAniDecoderInfoFunc)(QmageDecAniInfo *pAniDecInfo, QmageDecoderInfo *decoder_info);
+typedef QM_BOOL (*QmageDecVersionCheckFunc)(QMUCHAR *pInputStream);
+typedef QmageDecoderError (*QmageDecGetLastErrFunc)(void);
+typedef QMINT32 (*QmageDecodeFrameFunc)(QMUCHAR *pInputStream, QMINT32 input_size, QMUCHAR *pDecbuf);
 
 QmageDecCommon_GetVersionFunc QmageDecCommon_GetVersion;
 QmageDecCommon_GetOpaqueInfoFunc QmageDecCommon_GetOpaqueInfo;
 QmageDecCommon_GetDecoderInfoFunc QmageDecCommon_GetDecoderInfo;
 QmageDecCommon_ParseHeaderFunc QmageDecCommon_ParseHeader;
 QmageDecCommon_GetAniDecoderInfoFunc QmageDecCommon_GetAniDecoderInfo;
+QmageDecVersionCheckFunc QmageDecVersionCheck;
+QmageDecGetLastErrFunc QmageDecGetLastErr;
+QmageDecodeFrameFunc QmageDecodeFrame;
 
 void unloadLibrary(void) {
     // Close the library
@@ -76,6 +83,21 @@ void initializeFunctions() {
     }
     QmageDecCommon_GetAniDecoderInfo = (QmageDecCommon_GetAniDecoderInfoFunc)dlsym(handle, "QmageDecCommon_GetAniDecoderInfo");
     if (QmageDecCommon_GetAniDecoderInfo == nullptr) {
+        fprintf(stderr, "unable to get symbol\n");
+        unloadLibrary();
+    }
+    QmageDecVersionCheck = (QmageDecVersionCheckFunc)dlsym(handle, "QmageDecVersionCheck");
+    if (QmageDecVersionCheck == nullptr) {
+        fprintf(stderr, "unable to get symbol\n");
+        unloadLibrary();
+    }
+    QmageDecGetLastErr = (QmageDecGetLastErrFunc)dlsym(handle, "QmageDecGetLastErr");
+    if (QmageDecGetLastErr == nullptr) {
+        fprintf(stderr, "unable to get symbol\n");
+        unloadLibrary();
+    }
+    QmageDecodeFrame = (QmageDecodeFrameFunc)dlsym(handle, "QmageDecodeFrame");
+    if (QmageDecGetLastErr == nullptr) {
         fprintf(stderr, "unable to get symbol\n");
         unloadLibrary();
     }

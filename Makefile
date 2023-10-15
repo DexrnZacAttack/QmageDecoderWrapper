@@ -8,4 +8,4 @@ BUILD_DIR=bin
 build: main.o
 
 run:
-	./${BUILD_DIR}/main.o
+	cd ${BUILD_DIR} && ./main.o
