@@ -20,10 +20,15 @@ QMINT32 QuramQmage_Fclose(QMINT32 *stream) {
     return fclose((FILE *) stream);
 }
 
-/*QMINT32 * QuramQmage_Fopen(QMCHAR *filename, QMCHAR *mode) {
-    FILE *file = fopen(filename, mode);
-    return &file->_flags;
-}*/
+FILE *QuramQmage_Fopen_0(const char *filename, const char *modes)
+{
+  return fopen(filename, modes);
+}
+
+QMINT32* QuramQmage_Fopen(const QMCHAR *filename, const QMCHAR *mode)
+{
+  return (QMINT32*)QuramQmage_Fopen_0(filename, mode);
+}
 
 QMUINT32 QuramQmage_Fread(void *buffer, QMUINT32 size, QMUINT32 count, QMINT32 *stream) {
     return fread(buffer, size, count, (FILE *) stream);

@@ -11,7 +11,7 @@
 #define QMUINT32 unsigned int
 // fix this type
 #define QMUCHAR const char
-#define QMCHAR const char
+#define QMCHAR char
 enum QM_BOOL : int32_t {
   QM_BOOL_FALSE = 0x0,
   QM_BOOL_TRUE = 0x1,
@@ -38,20 +38,28 @@ void *handle;
 typedef QMINT32 (*QmageDecCommon_GetVersionFunc)();
 typedef QMINT32 (*QmageDecCommon_GetOpaqueInfoFunc)(QMUCHAR *pInputStream);
 typedef QM_BOOL (*QmageDecCommon_GetDecoderInfoFunc)(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
-typedef QM_BOOL (*QmageDecCommon_ParseHeaderFunc)(QMUCHAR *pInputStream, QmageIOType io_type, QMINT32 input_size, QmageDecoderHeader *pHeader_info);
+// typedef QM_BOOL (*QmageDecCommon_ParseHeaderFunc)(QMUCHAR *pInputStream, QmageIOType io_type, QMINT32 input_size, QmageDecoderHeader *pHeader_info);
 typedef QM_BOOL (*QmageDecCommon_GetAniDecoderInfoFunc)(QmageDecAniInfo *pAniDecInfo, QmageDecoderInfo *decoder_info);
 typedef QM_BOOL (*QmageDecVersionCheckFunc)(QMUCHAR *pInputStream);
 typedef QmageDecoderError (*QmageDecGetLastErrFunc)(void);
 typedef QMINT32 (*QmageDecodeFrameFunc)(QMUCHAR *pInputStream, QMINT32 input_size, QMUCHAR *pDecbuf);
+typedef QM_BOOL (*QmageDecCommon_QGetDecoderInfoFunc)(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
+typedef QM_BOOL (*QmageDecCommon_WGetDecoderInfoFunc)(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
+typedef QM_BOOL (*QmageDecCommon_VGetDecoderInfoFunc)(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
+typedef void (*QmageDecCommon_SetHeaderFromDecoderInfoFunc)(QmageDecoderHeader *pHeader_info, QmageDecoderInfo *pDecoder_info);
 
 QmageDecCommon_GetVersionFunc QmageDecCommon_GetVersion;
 QmageDecCommon_GetOpaqueInfoFunc QmageDecCommon_GetOpaqueInfo;
 QmageDecCommon_GetDecoderInfoFunc QmageDecCommon_GetDecoderInfo;
-QmageDecCommon_ParseHeaderFunc QmageDecCommon_ParseHeader;
+// QmageDecCommon_ParseHeaderFunc QmageDecCommon_ParseHeader;
 QmageDecCommon_GetAniDecoderInfoFunc QmageDecCommon_GetAniDecoderInfo;
 QmageDecVersionCheckFunc QmageDecVersionCheck;
 QmageDecGetLastErrFunc QmageDecGetLastErr;
 QmageDecodeFrameFunc QmageDecodeFrame;
+QmageDecCommon_QGetDecoderInfoFunc QmageDecCommon_QGetDecoderInfo;
+QmageDecCommon_WGetDecoderInfoFunc QmageDecCommon_WGetDecoderInfo;
+QmageDecCommon_VGetDecoderInfoFunc QmageDecCommon_VGetDecoderInfo;
+QmageDecCommon_SetHeaderFromDecoderInfoFunc QmageDecCommon_SetHeaderFromDecoderInfo;
 
 void unloadLibrary(void) {
     // Close the library
@@ -76,11 +84,11 @@ void initializeFunctions() {
         fprintf(stderr, "Unable to get symbol\n");
         unloadLibrary();
     }
-    QmageDecCommon_ParseHeader = (QmageDecCommon_ParseHeaderFunc)dlsym(handle, "QmageDecCommon_ParseHeader");
+    /*QmageDecCommon_ParseHeader = (QmageDecCommon_ParseHeaderFunc)dlsym(handle, "QmageDecCommon_ParseHeader");
     if (QmageDecCommon_ParseHeader == nullptr) {
         fprintf(stderr, "Unable to get symbol\n");
         unloadLibrary();
-    }
+    }*/
     QmageDecCommon_GetAniDecoderInfo = (QmageDecCommon_GetAniDecoderInfoFunc)dlsym(handle, "QmageDecCommon_GetAniDecoderInfo");
     if (QmageDecCommon_GetAniDecoderInfo == nullptr) {
         fprintf(stderr, "unable to get symbol\n");
@@ -97,7 +105,27 @@ void initializeFunctions() {
         unloadLibrary();
     }
     QmageDecodeFrame = (QmageDecodeFrameFunc)dlsym(handle, "QmageDecodeFrame");
-    if (QmageDecGetLastErr == nullptr) {
+    if (QmageDecodeFrame == nullptr) {
+        fprintf(stderr, "unable to get symbol\n");
+        unloadLibrary();
+    }
+    QmageDecCommon_QGetDecoderInfo = (QmageDecCommon_QGetDecoderInfoFunc)dlsym(handle, "QmageDecCommon_QGetDecoderInfo");
+    if (QmageDecCommon_QGetDecoderInfo == nullptr) {
+        fprintf(stderr, "unable to get symbol\n");
+        unloadLibrary();
+    }
+    QmageDecCommon_WGetDecoderInfo = (QmageDecCommon_WGetDecoderInfoFunc)dlsym(handle, "QmageDecCommon_WGetDecoderInfo");
+    if (QmageDecCommon_WGetDecoderInfo == nullptr) {
+        fprintf(stderr, "unable to get symbol\n");
+        unloadLibrary();
+    }
+    QmageDecCommon_VGetDecoderInfo = (QmageDecCommon_VGetDecoderInfoFunc)dlsym(handle, "QmageDecCommon_VGetDecoderInfo");
+    if (QmageDecCommon_VGetDecoderInfo == nullptr) {
+        fprintf(stderr, "unable to get symbol\n");
+        unloadLibrary();
+    }
+    QmageDecCommon_SetHeaderFromDecoderInfo = (QmageDecCommon_SetHeaderFromDecoderInfoFunc)dlsym(handle, "QmageDecCommon_SetHeaderFromDecoderInfo");
+    if (QmageDecCommon_SetHeaderFromDecoderInfo == nullptr) {
         fprintf(stderr, "unable to get symbol\n");
         unloadLibrary();
     }
