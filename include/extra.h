@@ -31,7 +31,6 @@ QM_BOOL QmageDecCommon_ParseHeader(QMUCHAR *pInputStream, QmageIOType io_type, Q
         int v12 = pInputStream[1];
         int v13 = pInputStream[0];
         int v14 = (v12 << 8) | v13;
-        std::cout << v12 << " " << v13 << " " << v14 << std::endl;
 
         if (v14 == QM_HEADER)
         {
@@ -70,14 +69,13 @@ QM_BOOL QmageDecCommon_ParseHeader(QMUCHAR *pInputStream, QmageIOType io_type, Q
                 return QM_BOOL_FALSE;
             }
         }
-        else if (v14 != PFR_HEADER)
+        else if (v14 == PFR_HEADER)
         {
-            std::cout << v14 << std::endl;
             return QM_BOOL_FALSE;
         }
         else
         {
-            QmageDecoderInfo decoder_info;
+            QmageDecoderInfo decoder_info{};
             if (QmageDecCommon_QGetDecoderInfo(pInputStream, input_size, &decoder_info))
             {
                 QmageDecCommon_SetHeaderFromDecoderInfo(pHeader_info, &decoder_info);

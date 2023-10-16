@@ -13,7 +13,6 @@ void check_error(const char* message) {
 // To the poor soul who looks at this
 // I do not know C/C++ in my defense
 int main() {
-    loadLibrary();
     const char* exampleQmg = "../examples/example.qmg";
     
     long long int input_size = std::filesystem::file_size(exampleQmg);
@@ -41,6 +40,5 @@ int main() {
         std::cout << "HeaderInfo height: " << headerInfo.height << "\n";
     }
 
-    unloadLibrary();
     return 0;
 }

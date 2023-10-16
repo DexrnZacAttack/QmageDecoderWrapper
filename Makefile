@@ -1,5 +1,5 @@
 CXX=g++
-CFLAGS=-Wall -Wextra -Iinclude/ -Llib/ -std=c++17
+CFLAGS=-Wall -Wextra -Iinclude/ -Llib/ -lQmageDecoder -lm -std=c++17 -Og
 BUILD_DIR=bin
 
 %.o: %.cpp
@@ -8,7 +8,7 @@ BUILD_DIR=bin
 build: main.o
 
 run:
-	cd ${BUILD_DIR} && ./main.o
+	cd ${BUILD_DIR} && LD_LIBRARY_PATH="../lib/:${LD_LIBRARY_PATH}" ./main.o
 
 clean:
 	rm -f ${BUILD_DIR}/main.o
