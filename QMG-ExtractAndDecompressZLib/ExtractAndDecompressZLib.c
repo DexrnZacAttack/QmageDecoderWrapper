@@ -9,7 +9,7 @@
 // also I had to remove/change some of the code comments as maybe having the ai try to add code comments is a horrible thing
 // Someone says this code looks like trash when formatted by the AI, but they don't know what it used to look like :tf:
 // I hate the variable name newFilename
-// Maybe one day I'll get better at C/C++
+// Maybe one day I'll get better at C/C++. Also this code was made at around 5 in the morning :)
 
 
 bool FlateIt(const char *inputFile, const char *outputFile) {
