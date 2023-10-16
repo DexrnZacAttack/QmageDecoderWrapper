@@ -1,6 +1,8 @@
 #include <qmg.h>
 #include <extra.h>
 #include <iostream>
+#include <fstream>
+#include <vector>
 #include <filesystem>
 
 void check_error(const char* message) {
@@ -13,9 +15,30 @@ void check_error(const char* message) {
 // To the poor soul who looks at this
 // I do not know C/C++ in my defense
 int main() {
-    const char* exampleQmg = "../examples/example.qmg";
-    
-    long long int input_size = std::filesystem::file_size(exampleQmg);
+    const char* exampleQmg = "../examples/bugdroid.qmg";
+
+    std::ifstream file(exampleQmg, std::ios::binary);
+
+    if (!file.is_open()) {
+        std::cerr << "Error opening file" << std::endl;
+        return 1;
+    }
+
+    // Get the length of the file
+    file.seekg(0, std::ios::end);
+    std::streampos fileSize = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    // Allocate a buffer to hold the file data
+    const char* buffer = new char[fileSize];
+
+    // Read the file into the buffer
+    file.read(const_cast<char*>(buffer), fileSize);
+
+    // Close the file
+    file.close();
+
+    // long long int input_size = std::filesystem::file_size(exampleQmg);
     int version = QmageDecCommon_GetVersion();
     int opaqueInfo = QmageDecCommon_GetOpaqueInfo(exampleQmg);
     std::cout << "QmageDecoder version:" << version << "\n";
@@ -31,7 +54,7 @@ int main() {
     }
     
     QmageDecoderHeader headerInfo;
-    QM_BOOL hasHeaderInfo = QmageDecCommon_ParseHeader(exampleQmg, QM_IO_FILE, input_size, &headerInfo);
+    QM_BOOL hasHeaderInfo = QmageDecCommon_ParseHeader(buffer, QM_IO_FILE, 16, &headerInfo);
     check_error("HeaderInfo");
     std::cout << get_extra_error() << std::endl;
     

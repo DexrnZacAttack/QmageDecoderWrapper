@@ -35,19 +35,19 @@ enum QM_BOOL : int32_t {
 #include <QmageDecoderError.h>
 
 extern "C" {
-    extern QMINT32 QmageDecCommon_GetVersion();
-    extern QMINT32 QmageDecCommon_GetOpaqueInfo(QMUCHAR *pInputStream);
-    extern QM_BOOL QmageDecCommon_GetDecoderInfo(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
+    QMINT32 QmageDecCommon_GetVersion();
+    QMINT32 QmageDecCommon_GetOpaqueInfo(QMUCHAR *pInputStream);
+    QM_BOOL QmageDecCommon_GetDecoderInfo(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
     // typedef QM_BOOL (*QmageDecCommon_ParseHeaderFunc)(QMUCHAR *pInputStream, QmageIOType io_type, QMINT32 input_size, QmageDecoderHeader *pHeader_info);
-    extern QM_BOOL QmageDecCommon_GetAniDecoderInfo(QmageDecAniInfo *pAniDecInfo, QmageDecoderInfo *decoder_info);
-    extern QM_BOOL QmageDecVersionCheck(QMUCHAR *pInputStream);
-    extern QmageDecoderError QmageDecGetLastErr(void);
-    extern QMINT32 QmageDecodeFrame(QMUCHAR *pInputStream, QMINT32 input_size, QMUCHAR *pDecbuf);
-    extern QM_BOOL QmageDecCommon_QGetDecoderInfo(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
-    extern QM_BOOL QmageDecCommon_WGetDecoderInfo(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
-    extern QM_BOOL QmageDecCommon_VGetDecoderInfo(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
-    extern void QmageDecCommon_SetHeaderFromDecoderInfo(QmageDecoderHeader *pHeader_info, QmageDecoderInfo *pDecoder_info);
-    extern QMINT32 QmageDecodeAniFrame(QmageDecAniInfo *pAniDecInfo, QMUCHAR *pDecbuf);
+    QM_BOOL QmageDecCommon_GetAniDecoderInfo(QmageDecAniInfo *pAniDecInfo, QmageDecoderInfo *decoder_info);
+    QM_BOOL QmageDecVersionCheck(QMUCHAR *pInputStream);
+    QmageDecoderError QmageDecGetLastErr(void);
+    QMINT32 QmageDecodeFrame(QMUCHAR *pInputStream, QMINT32 input_size, QMUCHAR *pDecbuf);
+    QM_BOOL QmageDecCommon_QGetDecoderInfo(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
+    QM_BOOL QmageDecCommon_WGetDecoderInfo(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
+    QM_BOOL QmageDecCommon_VGetDecoderInfo(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
+    void QmageDecCommon_SetHeaderFromDecoderInfo(QmageDecoderHeader *pHeader_info, QmageDecoderInfo *pDecoder_info);
+    QMINT32 QmageDecodeAniFrame(QmageDecAniInfo *pAniDecInfo, QMUCHAR *pDecbuf);
 }
 
 #endif
