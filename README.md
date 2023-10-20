@@ -9,4 +9,5 @@ https://github.com/DexrnZacAttack/QmageDecoder/blob/main/QMG-ExtractAndDecompres
 - [DexrnZacAttack](https://github.com/DexrnZacAttack)
 - [Zero_DSRS_VX](https://github.com/PhoenixVX)
 - [NerdTheNed](https://github.com/NeRdTheNed)
+- [vlOd2](https://github.com/vlOd2)
 - [Boreal](https://github.com/bor-real)
