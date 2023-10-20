@@ -15,7 +15,7 @@ void check_error(const char* message) {
 // To the poor soul who looks at this
 // I do not know C/C++ in my defense
 int main() {
-    const char* exampleQmg = "../examples/bugdroid.qmg";
+    const char* exampleQmg = "../examples/bootsamsung.qmg";
 
     std::ifstream file(exampleQmg, std::ios::binary);
 
@@ -45,7 +45,7 @@ int main() {
     std::cout << "QmageDecoder opaqueInfo:" << opaqueInfo << "\n";
     
     QmageDecoderInfo decoderInfo;
-    QM_BOOL hasDecoderInfo = QmageDecCommon_GetDecoderInfo(exampleQmg, 0, &decoderInfo);
+    QM_BOOL hasDecoderInfo = QmageDecCommon_GetDecoderInfo(buffer, fileSize, &decoderInfo);
     check_error("DecoderInfo");
     
     if (hasDecoderInfo) {
