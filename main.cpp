@@ -52,8 +52,8 @@ void check_error(const char* message) {
     }
 }
 
-// To the poor soul who looks at this
-// I do not know C/C++ in my defense
+// Zero: To the poor soul who looks at this
+// Zero: I do not know C/C++ in my defense
 int main() {
     int returnVal = 0;
     const char* exampleQmg = "../examples/bootsamsung.qmg";
