@@ -2,8 +2,9 @@
 # QmageDecoder
 #### A project to hopefully decode and convert QMG files.
 
-### There is a file you can build in QMG-ExtractAndDecompressZLib which will find all ZLib streams in the QMG file you specify and extract them all as well as trying to decompress all of them with zlib-flate.
-https://github.com/DexrnZacAttack/QmageDecoder/blob/main/QMG-ExtractAndDecompressZLib
+### Animation Decoding is now possible thanks to [NerdTheNed](https://github.com/NeRdTheNed)!
+<img src="https://github.com/DexrnZacAttack/QmageDecoder/assets/60078656/d4cbea3d-1e8e-44d8-a882-51e8ca3c97a5" width="512" height="1024">
+
 
 ## Contributors
 - [DexrnZacAttack](https://github.com/DexrnZacAttack)
@@ -11,3 +12,4 @@ https://github.com/DexrnZacAttack/QmageDecoder/blob/main/QMG-ExtractAndDecompres
 - [NerdTheNed](https://github.com/NeRdTheNed)
 - [vlOd2](https://github.com/vlOd2)
 - [Boreal](https://github.com/bor-real)
+
