@@ -4,6 +4,28 @@
 #include <vector>
 #include <filesystem>
 
+// Uncomment this to decode images to raw pixels.
+// Otherwise, they're encoded as PNG, which may be slower.
+//#define RAW_OUTPUT
+
+#ifndef RAW_OUTPUT
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_STATIC
+#include "stb_image_write.h"
+
+// Converts an image in RGB565 format to RGB888 format
+static void convertRGB565ToRGB888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
+    for (size_t i = 0; i < amountPixels; i++) {
+        unsigned short read = *(input++);
+        read |= *(input++) << 8;
+        unsigned long rgb = (read & 0x1f) << 3 | (read & 0xf800) << 8 | (read & 0x7e0) << 5;
+        *(output++) = (rgb >> 16) & 0xff;
+        *(output++) = (rgb >> 8) & 0xff;
+        *(output++) = rgb & 0xff;
+    }
+}
+#endif
+
 // Returns the amount of bits needed to store an image of this type
 static int typeToBits(QmageRawImageType type) {
     switch (type) {
@@ -20,18 +42,6 @@ static int typeToBits(QmageRawImageType type) {
             return 32;
         default:
             return 0;
-    }
-}
-
-// Converts an image in RGB565 format to RGB888 format
-static void convertRGB565ToRGB888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
-    for (size_t i = 0; i < amountPixels; i++) {
-        unsigned short read = *(input++);
-        read |= *(input++) << 8;
-        unsigned long rgb = (read & 0x1f) << 3 | (read & 0xf800) << 8 | (read & 0x7e0) << 5;
-        *(output++) = (rgb >> 16) & 0xff;
-        *(output++) = (rgb >> 8) & 0xff;
-        *(output++) = rgb & 0xff;
     }
 }
 
@@ -80,6 +90,7 @@ int main() {
     const char* frameBuffer = nullptr;
     size_t dimSize = 0;
     size_t frameSize = 0;
+    int stride = 0;
 
     // Read the header
     QM_BOOL hasHeaderInfo = QmageDecParseHeader(buffer, QM_IO_BUFFER, fileSize, &headerInfo);
@@ -126,16 +137,19 @@ int main() {
 
     // Create buffer to decode into
     dimSize = headerInfo.width * headerInfo.height;
-    frameSize = dimSize * (typeToBits(headerInfo.raw_type) / 8);
+    stride = typeToBits(headerInfo.raw_type) / 8;
+    frameSize = dimSize * stride;
     frameBuffer = new char[frameSize];
 
     if (aniInfo != nullptr) {
         // TODO Allow configuring this
+#ifndef RAW_OUTPUT
         bool convert565to888 = headerInfo.raw_type == QM_RAW_RGB565;
 
         if (convert565to888) {
             std::cout << "Image will be converted from to RGB565 to RGB888" << std::endl;
         }
+#endif
 
         for (int i = 0; i < headerInfo.totalFrameNumber; i++) {
             // Decode TODO handle errors
@@ -148,20 +162,30 @@ int main() {
             char* outBuffer;
             size_t outBufferSize;
 
+#ifndef RAW_OUTPUT
             if (convert565to888) {
                 outBufferSize = dimSize * 3;
                 outBuffer = new char[outBufferSize];
                 convertRGB565ToRGB888((const unsigned char*) frameBuffer, (unsigned char*) outBuffer, dimSize);
             } else {
+#endif
                 outBuffer = (char*) frameBuffer;
                 outBufferSize = frameSize;
+#ifndef RAW_OUTPUT
             }
+#endif
 
+#ifdef RAW_OUTPUT
             std::ofstream fos;
             std::string fileOutName = "frame-" + std::to_string(i) + ".raw";
             fos.open(fileOutName, std::ios::binary | std::ios::out);
             fos.write(outBuffer, outBufferSize);
             fos.close();
+#else
+            std::string fileOutName = "frame-" + std::to_string(i) + ".png";
+            int channels = convert565to888 ? 3 : stride;
+            stbi_write_png(fileOutName.c_str(), headerInfo.width, headerInfo.height, channels, outBuffer, headerInfo.width * channels);
+#endif
 
             //std::cout << "Wrote frame " << i << " to " << fileOutName << std::endl;
         }
