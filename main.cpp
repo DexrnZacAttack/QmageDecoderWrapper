@@ -174,20 +174,20 @@ int main() {
 #ifndef RAW_OUTPUT
             }
 #endif
-
+            int fileNum = i + 1;
 #ifdef RAW_OUTPUT
             std::ofstream fos;
-            std::string fileOutName = "frame-" + std::to_string(i) + ".raw";
+            std::string fileOutName = "frame-" + std::to_string(fileNum) + ".raw";
             fos.open(fileOutName, std::ios::binary | std::ios::out);
             fos.write(outBuffer, outBufferSize);
             fos.close();
 #else
-            std::string fileOutName = "frame-" + std::to_string(i) + ".png";
+            std::string fileOutName = "frame-" + std::to_string(fileNum) + ".png";
             int channels = convert565to888 ? 3 : stride;
             stbi_write_png(fileOutName.c_str(), headerInfo.width, headerInfo.height, channels, outBuffer, headerInfo.width * channels);
 #endif
 
-            //std::cout << "Wrote frame " << i << " to " << fileOutName << std::endl;
+            std::cout << "Wrote frame " << fileNum << " to " << fileOutName << std::endl;
         }
     } else {
         std::cerr << "Error: TODO support for non-animated images" << std::endl;;
@@ -195,7 +195,7 @@ int main() {
         goto cleanup;
     }
 
-    std::cout << "Successfully decoded " << exampleQmg << std::endl;
+    std::cout << "Successfully decoded " << headerInfo.totalFrameNumber << " frames from " << exampleQmg << std::endl;
 
 cleanup:
 
