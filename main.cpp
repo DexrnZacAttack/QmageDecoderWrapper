@@ -4,11 +4,6 @@
 #include <vector>
 #include <filesystem>
 
-// Uncomment this to decode images to raw pixels.
-// Otherwise, they're encoded as PNG, which may be slower.
-//#define RAW_OUTPUT
-
-#ifndef RAW_OUTPUT
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_STATIC
 #include "stb_image_write.h"
@@ -24,7 +19,6 @@ static void convertRGB565ToRGB888(const unsigned char* input, unsigned char* out
         *(output++) = rgb & 0xff;
     }
 }
-#endif
 
 // Returns the amount of bits needed to store an image of this type
 static int typeToBits(QmageRawImageType type) {
@@ -54,11 +48,43 @@ void check_error(const char* message) {
 
 // Zero: To the poor soul who looks at this
 // Zero: I do not know C/C++ in my defense
-int main() {
-    int returnVal = 0;
-    const char* exampleQmg = "../examples/bootsamsung.qmg";
+int main(int argc, char* argv[]) {
+    std::string filename;
+    bool raw = false;
+    bool quiet = false;
 
-    std::ifstream file(exampleQmg, std::ios::binary);
+    // Dexrn: Commands! (hopefully)
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+
+        if (arg == "--help" || arg == "-h") {
+            std::cout << "Usage: " << argv[0] << " [options] <file>" << std::endl;
+            std::cout << "Options:" << std::endl;
+            std::cout << "  -h, --help: Display this help message" << std::endl;
+            std::cout << "  -r, --raw: Files are written as raw pixels instead of PNG, skipping the encoding process." << std::endl;
+            std::cout << "  -q, --quiet: Doesn't stdcout every written file." << std::endl; // Dexrn: I'm sure I could phrase this better lmao
+            std::cout << "GitHub Repo: https://github.com/DexrnZacAttack/QmageDecoder" << std::endl;
+            return 0;
+        } else if (arg == "--raw" || arg == "-r") {
+            raw = true;
+        } else if (arg == "--quiet" || arg == "-q") {
+            quiet = true;
+        } else {
+            // if no options are specified, assume it a file has been passed in.
+            filename = arg;
+        }
+    }
+
+    if (filename.empty()) {
+        std::cerr << "Error: No file specified. Use --help for usage information." << std::endl;
+        return 1; // Exit with an error code
+    }
+
+
+    int returnVal = 0;
+    // const char* exampleQmg = "../examples/bootsamsung.qmg";
+
+    std::ifstream file(filename, std::ios::binary);
 
     if (!file.is_open()) {
         std::cerr << "Error opening file" << std::endl;
@@ -79,9 +105,9 @@ int main() {
     // Close the file
     file.close();
 
-    // long long int input_size = std::filesystem::file_size(exampleQmg);
+    // long long int input_size = std::filesystem::file_size(filename);
     int version = QmageDecCommon_GetVersion();
-    int opaqueInfo = QmageDecCommon_GetOpaqueInfo(exampleQmg);
+    int opaqueInfo = QmageDecCommon_GetOpaqueInfo(filename.c_str());
     std::cout << "QmageDecoder version:" << version << std::endl;
     std::cout << "QmageDecoder opaqueInfo:" << opaqueInfo << std::endl;
 
@@ -142,9 +168,10 @@ int main() {
     frameBuffer = new char[frameSize];
 
     if (aniInfo != nullptr) {
-        // TODO Allow configuring this
+        // NedTheNerd: TODO: Allow configuring this
+        // Dexrn: Did it.
 #ifndef RAW_OUTPUT
-        bool convert565to888 = headerInfo.raw_type == QM_RAW_RGB565;
+        bool convert565to888 = !raw && (headerInfo.raw_type == QM_RAW_RGB565);
 
         if (convert565to888) {
             std::cout << "Image will be converted from to RGB565 to RGB888" << std::endl;
@@ -152,7 +179,7 @@ int main() {
 #endif
 
         for (int i = 0; i < headerInfo.totalFrameNumber; i++) {
-            // Decode TODO handle errors
+            // NedTheNerd: Decode TODO handle errors
             //int aniDecodeReturn = QmageDecodeAniFrame(aniInfo, frameBuffer);
             //std::cout << "QmageDecodeAniFrame return value: " << aniDecodeReturn << std::endl;
             QmageDecodeAniFrame(aniInfo, frameBuffer);
@@ -162,32 +189,35 @@ int main() {
             char* outBuffer;
             size_t outBufferSize;
 
-#ifndef RAW_OUTPUT
             if (convert565to888) {
                 outBufferSize = dimSize * 3;
                 outBuffer = new char[outBufferSize];
                 convertRGB565ToRGB888((const unsigned char*) frameBuffer, (unsigned char*) outBuffer, dimSize);
             } else {
-#endif
                 outBuffer = (char*) frameBuffer;
                 outBufferSize = frameSize;
-#ifndef RAW_OUTPUT
             }
-#endif
-            int fileNum = i + 1;
-#ifdef RAW_OUTPUT
-            std::ofstream fos;
-            std::string fileOutName = "frame-" + std::to_string(fileNum) + ".raw";
-            fos.open(fileOutName, std::ios::binary | std::ios::out);
-            fos.write(outBuffer, outBufferSize);
-            fos.close();
-#else
-            std::string fileOutName = "frame-" + std::to_string(fileNum) + ".png";
-            int channels = convert565to888 ? 3 : stride;
-            stbi_write_png(fileOutName.c_str(), headerInfo.width, headerInfo.height, channels, outBuffer, headerInfo.width * channels);
-#endif
 
-            std::cout << "Wrote frame " << fileNum << " to " << fileOutName << std::endl;
+            int fileNum = i + 1;
+            std::string fileOutName;
+
+            if (raw) {
+                std::ofstream fos;
+                fileOutName = "frame-" + std::to_string(fileNum) + ".raw";
+                fos.open(fileOutName, std::ios::binary | std::ios::out);
+                fos.write(outBuffer, outBufferSize);
+                fos.close();
+            } else {
+                fileOutName = "frame-" + std::to_string(fileNum) + ".png";
+                int channels = convert565to888 ? 3 : stride;
+                stbi_write_png(fileOutName.c_str(), headerInfo.width, headerInfo.height, channels, outBuffer, headerInfo.width * channels);
+            }
+
+    if (!quiet) {
+        std::cout << "Wrote frame " << fileNum << " to " << fileOutName << std::endl;
+    }
+    
+
         }
     } else {
         std::cerr << "Error: TODO support for non-animated images" << std::endl;;
@@ -195,7 +225,7 @@ int main() {
         goto cleanup;
     }
 
-    std::cout << "Successfully decoded " << headerInfo.totalFrameNumber << " frames from " << exampleQmg << std::endl;
+        std::cout << "Successfully decoded " << headerInfo.totalFrameNumber << " frames from " << filename << std::endl;
 
 cleanup:
 
