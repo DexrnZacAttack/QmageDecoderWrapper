@@ -8,7 +8,7 @@ BUILD_DIR=bin
 build: main.o
 
 run:
-	cd ${BUILD_DIR} && LD_LIBRARY_PATH="../lib/:${LD_LIBRARY_PATH}" ./main.o
+	cd ${BUILD_DIR} && LD_LIBRARY_PATH="../lib/:${LD_LIBRARY_PATH}" ./main.o ../examples/bootsamsung.qmg
 
 clean:
 	rm -f ${BUILD_DIR}/main.o
