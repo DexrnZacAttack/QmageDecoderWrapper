@@ -1,8 +1,9 @@
 #include <qmg.h>
-#include <iostream>
-#include <fstream>
-#include <vector>
+
 #include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <vector>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_STATIC
@@ -17,6 +18,69 @@ static void convertRGB565ToRGB888(const unsigned char* input, unsigned char* out
         *(output++) = (rgb >> 16) & 0xff;
         *(output++) = (rgb >> 8) & 0xff;
         *(output++) = rgb & 0xff;
+    }
+}
+
+// Converts an image in RGBA5658 format to RGBA8888 format TODO test
+static void convertRGBA5658ToRGBA8888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
+    for (size_t i = 0; i < amountPixels; i++) {
+        unsigned short read = *(input++);
+        read |= *(input++) << 8;
+        unsigned long rgb = (read & 0x1f) << 3 | (read & 0xf800) << 8 | (read & 0x7e0) << 5;
+        *(output++) = (rgb >> 16) & 0xff;
+        *(output++) = (rgb >> 8) & 0xff;
+        *(output++) = rgb & 0xff;
+        *(output++) = *(input++);
+    }
+}
+
+// Converts an image in ARGB8565 format to RGBA8888 format TODO test
+static void convertARGB8565ToRGBA8888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
+    for (size_t i = 0; i < amountPixels; i++) {
+        unsigned char a = *(input++);
+        unsigned short read = *(input++);
+        read |= *(input++) << 8;
+        unsigned long rgb = (read & 0x1f) << 3 | (read & 0xf800) << 8 | (read & 0x7e0) << 5;
+        *(output++) = (rgb >> 16) & 0xff;
+        *(output++) = (rgb >> 8) & 0xff;
+        *(output++) = rgb & 0xff;
+        *(output++) = a;
+    }
+}
+
+// Converts an image in BGR888 format to RGB888 format TODO test
+static void convertBGR888ToRGB888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
+    for (size_t i = 0; i < amountPixels; i++) {
+        unsigned char b = *(input++);
+        unsigned char g = *(input++);
+        *(output++) = *(input++);
+        *(output++) = g;
+        *(output++) = b;
+    }
+}
+
+// Converts an image in ARGB8888 format to RGBA8888 format TODO test
+static void convertARGB8888ToRGBA8888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
+    for (size_t i = 0; i < amountPixels; i++) {
+        unsigned char a = *(input++);
+        *(output++) = *(input++);
+        *(output++) = *(input++);
+        *(output++) = *(input++);
+        *(output++) = a;
+    }
+}
+
+// Converts an image in BGRA8888 format to RGBA8888 format TODO test
+static void convertBGRA8888ToRGB888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
+    for (size_t i = 0; i < amountPixels; i++) {
+        unsigned char b = *(input++);
+        unsigned char g = *(input++);
+        unsigned char r = *(input++);
+        unsigned char a = *(input++);
+        *(output++) = r;
+        *(output++) = g;
+        *(output++) = b;
+        *(output++) = a;
     }
 }
 
@@ -36,6 +100,70 @@ static int typeToBits(QmageRawImageType type) {
             return 32;
         default:
             return 0;
+    }
+}
+
+static std::string getFormatName(QmageRawImageType type) {
+    switch (type) {
+        case QM_RAW_RGB565:
+            return "RGB565";
+        case QM_RAW_RGB888:
+            return "RGB888";
+        case QM_RAW_BGR888:
+            return "BGR888";
+        case QM_RAW_RGBA5658:
+            return "RGBA5658";
+        case QM_RAW_ARGB8565:
+            return "ARGB8565";
+        case QM_RAW_ARGB8888:
+            return "ARGB8888";
+        case QM_RAW_RGBA8888:
+            return "RGBA8888";
+        case QM_RAW_BGRA8888:
+            return "BGRA8888";
+        default:
+            return "???";
+    }
+}
+
+static QmageRawImageType getConvertedType(QmageRawImageType type) {
+    switch (type) {
+        case QM_RAW_RGB565:
+        case QM_RAW_BGR888:
+            return QM_RAW_RGB888;
+        case QM_RAW_RGBA5658:
+        case QM_RAW_ARGB8565:
+        case QM_RAW_ARGB8888:
+        case QM_RAW_BGRA8888:
+            return QM_RAW_RGBA8888;
+        default:
+            return type;
+    }
+}
+
+static void doConvert(QmageRawImageType from, const unsigned char* input, unsigned char* output, size_t amountPixels) {
+    switch (from) {
+        case QM_RAW_RGB565:
+            convertRGB565ToRGB888(input, output, amountPixels);
+            break;
+        case QM_RAW_RGBA5658:
+            convertRGBA5658ToRGBA8888(input, output, amountPixels);
+            break;
+        case QM_RAW_ARGB8565:
+            convertARGB8565ToRGBA8888(input, output, amountPixels);
+            break;
+        case QM_RAW_BGR888:
+            convertBGR888ToRGB888(input, output, amountPixels);
+            break;
+        case QM_RAW_ARGB8888:
+            convertARGB8888ToRGBA8888(input, output, amountPixels);
+            break;
+        case QM_RAW_BGRA8888:
+            convertBGRA8888ToRGB888(input, output, amountPixels);
+            break;
+        default:
+            memcpy(output, input, amountPixels * (typeToBits(from) / 8));
+            break;
     }
 }
 
@@ -62,7 +190,7 @@ int main(int argc, char* argv[]) {
             std::cout << "Options:" << std::endl;
             std::cout << "  -h, --help: Display this help message" << std::endl;
             std::cout << "  -r, --raw: Files are written as raw pixels instead of PNG, skipping the encoding process." << std::endl;
-            std::cout << "  -q, --quiet: Doesn't stdcout every written file." << std::endl; // Dexrn: I'm sure I could phrase this better lmao
+            std::cout << "  -q, --quiet: Doesn't stdcout every written file." << std::endl;  // Dexrn: I'm sure I could phrase this better lmao
             std::cout << "GitHub Repo: https://github.com/DexrnZacAttack/QmageDecoder" << std::endl;
             return 0;
         } else if (arg == "--raw" || arg == "-r") {
@@ -77,7 +205,7 @@ int main(int argc, char* argv[]) {
 
     if (filename.empty()) {
         std::cerr << "Error: No file specified. Use --help for usage information." << std::endl;
-        return 1; // Exit with an error code
+        return 1;  // Exit with an error code
     }
 
     int returnVal = 0;
@@ -131,7 +259,7 @@ int main(int argc, char* argv[]) {
     std::cout << "HeaderInfo width: " << headerInfo.width << std::endl;
     std::cout << "HeaderInfo height: " << headerInfo.height << std::endl;
     std::cout << "HeaderInfo padding: " << headerInfo.padding << std::endl;
-    std::cout << "HeaderInfo raw_type: " << headerInfo.raw_type << std::endl;
+    std::cout << "HeaderInfo raw_type: " << getFormatName(headerInfo.raw_type) << std::endl;
     std::cout << "HeaderInfo transparency: " << headerInfo.transparency << std::endl;
     std::cout << "HeaderInfo NinePatched: " << headerInfo.NinePatched << std::endl;
     std::cout << "HeaderInfo IsOpaque: " << headerInfo.IsOpaque << std::endl;
@@ -169,10 +297,11 @@ int main(int argc, char* argv[]) {
     if (aniInfo != nullptr) {
         // NedTheNerd: TODO: Allow configuring this
         // Dexrn: Did it.
-        bool convert565to888 = !raw && (headerInfo.raw_type == QM_RAW_RGB565);
+        QmageRawImageType convertedType = getConvertedType(headerInfo.raw_type);
+        bool needsConvert = !raw && (headerInfo.raw_type != convertedType);
 
-        if (convert565to888) {
-            std::cout << "Image will be converted from to RGB565 to RGB888" << std::endl;
+        if (needsConvert) {
+            std::cout << "Image will be converted from " << getFormatName(headerInfo.raw_type) << " to " << getFormatName(convertedType) << std::endl;
         }
 
         for (int i = 0; i < headerInfo.totalFrameNumber; i++) {
@@ -185,12 +314,15 @@ int main(int argc, char* argv[]) {
             // Choose between raw decoded output or converting it if needed
             char* outBuffer;
             size_t outBufferSize;
+            size_t channels;
 
-            if (convert565to888) {
-                outBufferSize = dimSize * 3;
+            if (needsConvert) {
+                channels = typeToBits(convertedType) / 8;
+                outBufferSize = dimSize * channels;
                 outBuffer = new char[outBufferSize];
-                convertRGB565ToRGB888((const unsigned char*) frameBuffer, (unsigned char*) outBuffer, dimSize);
+                doConvert(headerInfo.raw_type, (const unsigned char*) frameBuffer, (unsigned char*) outBuffer, dimSize);
             } else {
+                channels = stride;
                 outBuffer = (char*) frameBuffer;
                 outBufferSize = frameSize;
             }
@@ -206,7 +338,6 @@ int main(int argc, char* argv[]) {
                 fos.close();
             } else {
                 fileOutName = "frame-" + std::to_string(fileNum) + ".png";
-                int channels = convert565to888 ? 3 : stride;
                 stbi_write_png(fileOutName.c_str(), headerInfo.width, headerInfo.height, channels, outBuffer, headerInfo.width * channels);
             }
 
