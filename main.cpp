@@ -341,6 +341,10 @@ int main(int argc, char* argv[]) {
                 stbi_write_png(fileOutName.c_str(), headerInfo.width, headerInfo.height, channels, outBuffer, headerInfo.width * channels);
             }
 
+            if (outBuffer != frameBuffer) {
+                delete[] outBuffer;
+            }
+
             if (!quiet) {
                 std::cout << "Wrote frame " << fileNum << " to " << fileOutName << std::endl;
             }
@@ -357,6 +361,14 @@ cleanup:
 
     if (aniInfo != nullptr) {
         QmageDecDestroyAniInfo(aniInfo);
+    }
+
+    if (buffer != nullptr) {
+        delete[] buffer;
+    }
+
+    if (frameBuffer != nullptr) {
+        delete[] frameBuffer;
     }
 
     return returnVal;
