@@ -80,7 +80,6 @@ int main(int argc, char* argv[]) {
         return 1; // Exit with an error code
     }
 
-
     int returnVal = 0;
     // const char* exampleQmg = "../examples/bootsamsung.qmg";
 
@@ -148,14 +147,14 @@ int main(int argc, char* argv[]) {
 
     // TODO What is the correct way to check for animation?
     if (headerInfo.mode != 0 || headerInfo.totalFrameNumber > 1) {
-        std::cout << "Image is animated" << std::endl;;
+        std::cout << "Image is animated" << std::endl;
 
         // Set up the animation decoding context
         aniInfo = QmageDecCreateAniInfo((void*) buffer, QM_IO_BUFFER, fileSize);
         check_error("QmageDecCreateAniInfo");
 
         if (aniInfo == nullptr) {
-            std::cerr << "Error: QmageDecCreateAniInfo failed" << std::endl;;
+            std::cerr << "Error: QmageDecCreateAniInfo failed" << std::endl;
             returnVal = 1;
             goto cleanup;
         }
@@ -170,13 +169,11 @@ int main(int argc, char* argv[]) {
     if (aniInfo != nullptr) {
         // NedTheNerd: TODO: Allow configuring this
         // Dexrn: Did it.
-#ifndef RAW_OUTPUT
         bool convert565to888 = !raw && (headerInfo.raw_type == QM_RAW_RGB565);
 
         if (convert565to888) {
             std::cout << "Image will be converted from to RGB565 to RGB888" << std::endl;
         }
-#endif
 
         for (int i = 0; i < headerInfo.totalFrameNumber; i++) {
             // NedTheNerd: Decode TODO handle errors
@@ -213,19 +210,17 @@ int main(int argc, char* argv[]) {
                 stbi_write_png(fileOutName.c_str(), headerInfo.width, headerInfo.height, channels, outBuffer, headerInfo.width * channels);
             }
 
-    if (!quiet) {
-        std::cout << "Wrote frame " << fileNum << " to " << fileOutName << std::endl;
-    }
-    
-
+            if (!quiet) {
+                std::cout << "Wrote frame " << fileNum << " to " << fileOutName << std::endl;
+            }
         }
     } else {
-        std::cerr << "Error: TODO support for non-animated images" << std::endl;;
+        std::cerr << "Error: TODO support for non-animated images" << std::endl;
         returnVal = 1;
         goto cleanup;
     }
 
-        std::cout << "Successfully decoded " << headerInfo.totalFrameNumber << " frames from " << filename << std::endl;
+    std::cout << "Successfully decoded " << headerInfo.totalFrameNumber << " frames from " << filename << std::endl;
 
 cleanup:
 
