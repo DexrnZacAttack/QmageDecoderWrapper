@@ -1,5 +1,5 @@
 CXX=g++
-CFLAGS=-Wall -Wextra -Iinclude/ -Llib/ -lQmageDecoder -lm -std=c++17 -Og
+CFLAGS=-Wall -Wextra -Iinclude/ -Llib/ -lQmageDecoder -lm -std=c++17 -Og -fuse-ld=lld
 BUILD_DIR=bin
 
 %.o: %.cpp
