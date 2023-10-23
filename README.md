@@ -9,16 +9,16 @@
 ### The recommended distro for this would be Alpine
 ```bash
 docker pull --platform linux/arm/v7 alpine:latest
-docker run --privileged --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined -v .:/arm -it alpine:latest
+docker run --privileged --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined -v .:/qmg -it alpine:latest
 apk add make gcc g++
-cd arm
+cd qmg
 ```
 ### You can also use Debian, but you'd need to patch the libQmageDecoder.so
 ```bash
 docker pull --platform linux/arm/v7 debian:latest
-docker run --privileged --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined -v .:/arm -it debian:latest
-apt update && apt install make gcc g++
-cd arm
+docker run --privileged --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined -v .:/qmg -it debian:latest
+apt update && apt install make gcc g++ patchelf
+cd qmg
 patchelf --replace-needed libc.so libc.so.6 ./lib/libQmageDecoder.so
 patchelf --replace-needed libstdc++.so libstdc++.so.6 ./lib/libQmageDecoder.so
 ```
