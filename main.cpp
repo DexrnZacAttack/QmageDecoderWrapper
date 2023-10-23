@@ -271,7 +271,7 @@ int main(int argc, char* argv[]) {
             std::cout << "Usage: " << argv[0] << " [options] <file>" << std::endl;
             std::cout << "Options:" << std::endl;
             std::cout << "  -h, --help: Display this help message" << std::endl;
-            std::cout << "  -f, --format: Outputs the frames in the format specified.\n  Supported formats are: raw, png (default), jpg, tga, bmp." << std::endl;
+            std::cout << "  -f, --format: Outputs the frames in the format specified.\n  Supported formats are: raw, png (default), jpg, tga, bmp, and animated gif." << std::endl;
             std::cout << "  -q, --quiet: Doesn't stdcout every written file." << std::endl;  // Dexrn: I'm sure I could phrase this better lmao
             std::cout << "  -Q, --really-quiet: Doesn't stdcout anything." << std::endl;
             std::cout << "GitHub Repo: https://github.com/DexrnZacAttack/QmageDecoder" << std::endl;
