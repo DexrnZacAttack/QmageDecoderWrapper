@@ -182,7 +182,7 @@ enum ImageOutputFormat {
     BMP
 };
 
-std::string getExtensionForOutputFormat(ImageOutputFormat format) {
+static std::string getExtensionForOutputFormat(ImageOutputFormat format) {
     switch (format) {
         case PNG:
             return ".png";
@@ -197,7 +197,7 @@ std::string getExtensionForOutputFormat(ImageOutputFormat format) {
     }
 }
 
-bool writeImageToFile(std::string fileOutName, ImageOutputFormat format, int width, int height, int channels, char* imageData) {
+static bool writeImageToFile(std::string fileOutName, ImageOutputFormat format, int width, int height, int channels, char* imageData) {
     switch (format) {
         case PNG:
             return stbi_write_png(fileOutName.c_str(), width, height, channels, imageData, width * channels);
