@@ -174,17 +174,62 @@ void check_error(const char* message) {
     }
 }
 
+enum ImageOutputFormat {
+    RAW,
+    PNG,
+    JPG,
+    TGA,
+    BMP
+};
+
+std::string getExtensionForOutputFormat(ImageOutputFormat format) {
+    switch (format) {
+        case PNG:
+            return ".png";
+        case JPG:
+            return ".jpg";
+        case TGA:
+            return ".tga";
+        case BMP:
+            return ".bmp";
+        default:
+            return ".raw";
+    }
+}
+
+bool writeImageToFile(std::string fileOutName, ImageOutputFormat format, int width, int height, int channels, char* imageData) {
+    switch (format) {
+        case PNG:
+            return stbi_write_png(fileOutName.c_str(), width, height, channels, imageData, width * channels);
+        case JPG:
+            return stbi_write_jpg(fileOutName.c_str(), width, height, channels, imageData, 90);
+        case TGA:
+            return stbi_write_tga(fileOutName.c_str(), width, height, channels, imageData);
+        case BMP:
+            return stbi_write_bmp(fileOutName.c_str(), width, height, channels, imageData);
+        default:
+            // TODO handle errors
+            std::ofstream fos;
+            fos.open(fileOutName, std::ios::binary | std::ios::out);
+            fos.write(imageData, width * height * channels);
+            fos.close();
+            return true;
+    }
+}
+
+enum Verbosity {
+    REALLY_QUIET,
+    QUIET,
+    NORMAL
+};
+
 // Zero: To the poor soul who looks at this
 // Zero: I do not know C/C++ in my defense
 int main(int argc, char* argv[]) {
     std::string filename;
     // Dexrn: args
-    bool raw = false;
-    bool bmp = false;
-    bool jpg = false;
-    bool tga = false;
-    bool quiet = false;
-    bool reallyquiet = false;
+    ImageOutputFormat outputFormat = PNG;
+    Verbosity verbosityLevel = NORMAL;
 
     // Dexrn: Commands! (hopefully)
     for (int i = 1; i < argc; ++i) {
@@ -204,15 +249,15 @@ int main(int argc, char* argv[]) {
             if (i + 1 < argc) {
                 std::string format = argv[i + 1];
                 if (format == "raw") {
-                    raw = true;
-                } else if (format == "jpg") {
-                    jpg = true;
+                    outputFormat = RAW;
+                } else if (format == "jpg" || format == "jpeg") {
+                    outputFormat = JPG;
                 } else if (format == "png") {
-                    // Dexrn: PNG is already the default, no need to change anything right?
+                    outputFormat = PNG;
                 } else if (format == "tga") {
-                    tga = true;
+                    outputFormat = TGA;
                 } else if (format == "bmp") {
-                    bmp = true;
+                    outputFormat = BMP;
                 } else {
                     std::cerr << "Error: Unknown format specified: " << format << std::endl;
                     return 1;
@@ -221,9 +266,9 @@ int main(int argc, char* argv[]) {
             }
         } else if (arg == "--quiet" || arg == "-q") {
             // Dexrn: maybe quiet should be more quiet?
-            quiet = true;
+            verbosityLevel = QUIET;
         } else if (arg == "--really-quiet" || arg == "-Q") {
-            reallyquiet = true;
+            verbosityLevel = REALLY_QUIET;
         } else {
             // Dexrn: if no options are specified, assume it a file has been passed in.
             filename = arg;
@@ -263,7 +308,7 @@ int main(int argc, char* argv[]) {
     int version = QmageDecCommon_GetVersion();
     int opaqueInfo = QmageDecCommon_GetOpaqueInfo(filename.c_str());
 
-    if (!reallyquiet) {
+    if (verbosityLevel > REALLY_QUIET) {
         // Dexrn: Changed these so that it is more clear that we are talking about the library and not QmageDecoder.
         std::cout << "libQmageDecoder version:" << version << std::endl;
         std::cout << "libQmageDecoder opaqueInfo:" << opaqueInfo << std::endl;
@@ -286,7 +331,7 @@ int main(int argc, char* argv[]) {
         goto cleanup;
     }
 
-    if (!reallyquiet) {
+    if (verbosityLevel > REALLY_QUIET) {
         std::cout << "\nQmageDecoderInfo" << std::endl;
         std::cout << "HeaderInfo mode: " << headerInfo.mode << std::endl;
         std::cout << "HeaderInfo width: " << headerInfo.width << std::endl;
@@ -332,7 +377,7 @@ int main(int argc, char* argv[]) {
 
     // TODO What is the correct way to check for animation?
     if (headerInfo.mode != 0 || headerInfo.totalFrameNumber > 1) {
-        if (!reallyquiet) {
+        if (verbosityLevel > REALLY_QUIET) {
             std::cout << "Image is animated" << std::endl;
         }
 
@@ -357,9 +402,9 @@ int main(int argc, char* argv[]) {
         // NedTheNerd: TODO: Allow configuring this
         // Dexrn: Did it.
         QmageRawImageType convertedType = getConvertedType(headerInfo.raw_type);
-        bool needsConvert = !raw && (headerInfo.raw_type != convertedType);
+        bool needsConvert = (outputFormat != RAW) && (headerInfo.raw_type != convertedType);
 
-        if (needsConvert && !reallyquiet) {
+        if (needsConvert && (verbosityLevel > REALLY_QUIET)) {
             std::cout << "Image will be converted from " << getFormatName(headerInfo.raw_type) << " to " << getFormatName(convertedType) << std::endl;
         }
 
@@ -387,36 +432,18 @@ int main(int argc, char* argv[]) {
             }
 
             int fileNum = i + 1;
-            std::string fileOutName;
+            std::string fileOutName = filename + "_frame-" + std::to_string(fileNum) + getExtensionForOutputFormat(outputFormat);
 
-            // Dexrn: added more formats + filename in fileOutName
-            if (raw) {
-                std::ofstream fos;
-                fileOutName = filename + "_frame-" + std::to_string(fileNum) + ".raw";
-                fos.open(fileOutName, std::ios::binary | std::ios::out);
-                fos.write(outBuffer, outBufferSize);
-                fos.close();
-            } else if (jpg) {
-                fileOutName = filename + "_frame-" + std::to_string(fileNum) + ".jpg";
-                stbi_write_jpg(fileOutName.c_str(), headerInfo.width, headerInfo.height, channels, outBuffer, 90);
-            } else if (tga) {
-                fileOutName = filename + "_frame-" + std::to_string(fileNum) + ".tga";
-                stbi_write_tga(fileOutName.c_str(), headerInfo.width, headerInfo.height, channels, outBuffer);
-            } else if (bmp) {
-                fileOutName = filename + "_frame-" + std::to_string(fileNum) + ".bmp";
-                stbi_write_bmp(fileOutName.c_str(), headerInfo.width, headerInfo.height, channels, outBuffer);
-            } else {
-                fileOutName = filename + "_frame-" + std::to_string(fileNum) + ".png";
-                stbi_write_png(fileOutName.c_str(), headerInfo.width, headerInfo.height, channels, outBuffer, headerInfo.width * channels);
+            if (!writeImageToFile(fileOutName, outputFormat, headerInfo.width, headerInfo.height, channels, outBuffer)) {
+                returnVal = 1;
+                std::cerr << "Error: Could not write frame " << fileNum << " to file " << fileOutName << std::endl;
+            } else if (verbosityLevel > QUIET) {
+                // Dexrn: had to escape the () otherwise it wouldn't be included in the output
+                std::cout << "Wrote frame " << fileNum << " to \"" << fileOutName << "\"" << std::endl;
             }
 
             if (outBuffer != frameBuffer) {
                 delete[] outBuffer;
-            }
-
-            if (!(quiet || reallyquiet)) {
-                // Dexrn: had to escape the () otherwise it wouldn't be included in the output
-                std::cout << "Wrote frame " << fileNum << " to \"" << fileOutName << "\"" << std::endl;
             }
         }
     } else {
@@ -425,7 +452,7 @@ int main(int argc, char* argv[]) {
         goto cleanup;
     }
 
-    if (!(quiet || reallyquiet)) {
+    if (verbosityLevel > QUIET) {
         std::cout << "Successfully decoded " << headerInfo.totalFrameNumber << " frames from " << filename << std::endl;
     }
 
