@@ -12,6 +12,9 @@
 #define MSF_GIF_IMPL
 #include "msf_gif.h"
 
+// Comment this out to only use public functions from libQmageDecoder
+#define USE_INTERNAL_FUNCTIONS
+
 // Converts an image in RGB565 format to RGB888 format
 static void convertRGB565ToRGB888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
     for (size_t i = 0; i < amountPixels; i++) {
@@ -339,6 +342,7 @@ int main(int argc, char* argv[]) {
     file.close();
 
     // long long int input_size = std::filesystem::file_size(filename);
+#ifdef USE_INTERNAL_FUNCTIONS
     int version = QmageDecCommon_GetVersion();
     int opaqueInfo = QmageDecCommon_GetOpaqueInfo(filename.c_str());
 
@@ -347,6 +351,7 @@ int main(int argc, char* argv[]) {
         std::cout << "libQmageDecoder version:" << version << std::endl;
         std::cout << "libQmageDecoder opaqueInfo:" << opaqueInfo << std::endl;
     }
+#endif
 
     QmageDecoderHeader headerInfo;
     QmageDecAniInfo* aniInfo = nullptr;
@@ -386,6 +391,7 @@ int main(int argc, char* argv[]) {
         std::cout << "HeaderInfo Animation_delaytime: " << headerInfo.Animation_delaytime << std::endl;
         std::cout << "HeaderInfo Animation_NoRepeat: " << headerInfo.Animation_NoRepeat << std::endl;
 
+#ifdef USE_INTERNAL_FUNCTIONS
         QmageDecoderInfo decoderInfo;
         QM_BOOL hasDecoderInfo2 = QmageDecCommon_GetDecoderInfo(buffer, fileSize, &decoderInfo);
         check_error("QmageDecCommon_GetDecoderInfo");
@@ -408,6 +414,7 @@ int main(int argc, char* argv[]) {
             std::cout << "DecoderInfo pAniDecInfo: " << decoderInfo.pAniDecInfo << "\n";
             std::cout << "DecoderInfo AndroidSupport: " << decoderInfo.AndroidSupport << "\n";
         }
+#endif
     }
 
     // TODO What is the correct way to check for animation?
