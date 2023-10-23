@@ -9,6 +9,9 @@
 #define STB_IMAGE_WRITE_STATIC
 #include "stb_image_write.h"
 
+#define MSF_GIF_IMPL
+#include "msf_gif.h"
+
 // Converts an image in RGB565 format to RGB888 format
 static void convertRGB565ToRGB888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
     for (size_t i = 0; i < amountPixels; i++) {
@@ -81,6 +84,26 @@ static void convertBGRA8888ToRGB888(const unsigned char* input, unsigned char* o
         *(output++) = g;
         *(output++) = b;
         *(output++) = a;
+    }
+}
+
+// Converts an image in RGBA8888 format to RGB888 format
+static void convertRGBA8888ToRGB888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
+    for (size_t i = 0; i < amountPixels; i++) {
+        *(output++) = *(input++);
+        *(output++) = *(input++);
+        *(output++) = *(input++);
+        input++;
+    }
+}
+
+// Converts an image in RGB888 format to RGBA8888 format
+static void convertRGB888ToRGBA8888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
+    for (size_t i = 0; i < amountPixels; i++) {
+        *(output++) = *(input++);
+        *(output++) = *(input++);
+        *(output++) = *(input++);
+        *(output++) = 0xff;
     }
 }
 
@@ -179,7 +202,8 @@ enum ImageOutputFormat {
     PNG,
     JPG,
     TGA,
-    BMP
+    BMP,
+    GIF
 };
 
 static std::string getExtensionForOutputFormat(ImageOutputFormat format) {
@@ -192,13 +216,26 @@ static std::string getExtensionForOutputFormat(ImageOutputFormat format) {
             return ".tga";
         case BMP:
             return ".bmp";
+        case GIF:
+            return ".gif";
         default:
             return ".raw";
     }
 }
 
+static bool writeBytesToFile(const char* fileName, char* data, size_t size) {
+    // TODO handle errors
+    std::ofstream fos;
+    fos.open(fileName, std::ios::binary | std::ios::out);
+    fos.write(data, size);
+    fos.close();
+    return true;
+}
+
 static bool writeImageToFile(std::string fileOutName, ImageOutputFormat format, int width, int height, int channels, char* imageData) {
     switch (format) {
+        case GIF:
+            return false;
         case PNG:
             return stbi_write_png(fileOutName.c_str(), width, height, channels, imageData, width * channels);
         case JPG:
@@ -208,12 +245,7 @@ static bool writeImageToFile(std::string fileOutName, ImageOutputFormat format, 
         case BMP:
             return stbi_write_bmp(fileOutName.c_str(), width, height, channels, imageData);
         default:
-            // TODO handle errors
-            std::ofstream fos;
-            fos.open(fileOutName, std::ios::binary | std::ios::out);
-            fos.write(imageData, width * height * channels);
-            fos.close();
-            return true;
+            return writeBytesToFile(fileOutName.c_str(), imageData, width * height * channels);
     }
 }
 
@@ -258,6 +290,8 @@ int main(int argc, char* argv[]) {
                     outputFormat = TGA;
                 } else if (format == "bmp") {
                     outputFormat = BMP;
+                } else if (format == "gif") {
+                    outputFormat = GIF;
                 } else {
                     std::cerr << "Error: Unknown format specified: " << format << std::endl;
                     return 1;
@@ -320,6 +354,7 @@ int main(int argc, char* argv[]) {
     size_t dimSize = 0;
     size_t frameSize = 0;
     int stride = 0;
+    MsfGifState gifState = {};
 
     // Read the header
     QM_BOOL hasHeaderInfo = QmageDecParseHeader(buffer, QM_IO_BUFFER, fileSize, &headerInfo);
@@ -398,6 +433,14 @@ int main(int argc, char* argv[]) {
     frameSize = dimSize * stride;
     frameBuffer = new char[frameSize];
 
+    if (outputFormat == GIF) {
+        if (!msf_gif_begin(&gifState, headerInfo.width, headerInfo.height)) {
+            std::cerr << "Error: Could not create gif encoding context" << std::endl;
+            returnVal = 1;
+            goto cleanup;
+        }
+    }
+
     if (aniInfo != nullptr) {
         // NedTheNerd: TODO: Allow configuring this
         // Dexrn: Did it.
@@ -431,15 +474,37 @@ int main(int argc, char* argv[]) {
                 outBufferSize = frameSize;
             }
 
-            int fileNum = i + 1;
-            std::string fileOutName = filename + "_frame-" + std::to_string(fileNum) + getExtensionForOutputFormat(outputFormat);
+            if (outputFormat == GIF) {
+                uint8_t* gifBuffer;
 
-            if (!writeImageToFile(fileOutName, outputFormat, headerInfo.width, headerInfo.height, channels, outBuffer)) {
-                returnVal = 1;
-                std::cerr << "Error: Could not write frame " << fileNum << " to file " << fileOutName << std::endl;
-            } else if (verbosityLevel > QUIET) {
-                // Dexrn: had to escape the () otherwise it wouldn't be included in the output
-                std::cout << "Wrote frame " << fileNum << " to \"" << fileOutName << "\"" << std::endl;
+                if (channels != 4) {
+                    gifBuffer = new uint8_t[dimSize * 4];
+                    convertRGB888ToRGBA8888((const unsigned char*) outBuffer, (unsigned char*) gifBuffer, dimSize);
+                } else {
+                    gifBuffer = (uint8_t*) outBuffer;
+                }
+
+                if (!msf_gif_frame(&gifState, gifBuffer, 0, 16, headerInfo.width * 4)) {
+                    returnVal = 1;
+                    std::cerr << "Error: Could not write frame " << i + 1 << std::endl;
+                } else if (verbosityLevel > QUIET) {
+                    std::cout << "Wrote frame " << i + 1 << std::endl;
+                }
+
+                if ((char*) gifBuffer != outBuffer) {
+                    delete[] gifBuffer;
+                }
+            } else {
+                int fileNum = i + 1;
+                std::string fileOutName = filename + "_frame-" + std::to_string(fileNum) + getExtensionForOutputFormat(outputFormat);
+
+                if (!writeImageToFile(fileOutName, outputFormat, headerInfo.width, headerInfo.height, channels, outBuffer)) {
+                    returnVal = 1;
+                    std::cerr << "Error: Could not write frame " << fileNum << " to file " << fileOutName << std::endl;
+                } else if (verbosityLevel > QUIET) {
+                    // Dexrn: had to escape the () otherwise it wouldn't be included in the output
+                    std::cout << "Wrote frame " << fileNum << " to \"" << fileOutName << "\"" << std::endl;
+                }
             }
 
             if (outBuffer != frameBuffer) {
@@ -468,6 +533,20 @@ cleanup:
 
     if (frameBuffer != nullptr) {
         delete[] frameBuffer;
+    }
+
+    if (outputFormat == GIF) {
+        std::string outFileName = filename + ".gif";
+        MsfGifResult result = msf_gif_end(&gifState);
+
+        if (result.data && writeBytesToFile(outFileName.c_str(), (char*) result.data, result.dataSize)) {
+            std::cout << "Successfully wrote gif to " << outFileName << std::endl;
+        } else {
+            std::cerr << "Error: Could not write gif to " << filename << ".gif" << std::endl;
+            returnVal = 1;
+        }
+
+        msf_gif_free(result);
     }
 
     return returnVal;
