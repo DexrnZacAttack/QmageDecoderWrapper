@@ -201,27 +201,27 @@ int main(int argc, char* argv[]) {
             return 0;
             // Dexrn: yes I know this looks like hell...
         } else if (arg == "--format" || arg == "-f") {
-        if (i + 1 < argc) {
-            std::string format = argv[i + 1];
-            if (format == "raw") {
-                raw = true;
-            } else if (format == "jpg") {
-                jpg = true;
-            } else if (format == "png") {
-                // Dexrn: PNG is already the default, no need to change anything right?
-            } else if (format == "tga") {
-                tga = true;
-            } else if (format == "bmp") {
-                bmp = true;
-            } else {
-                std::cerr << "Error: Unknown format specified: " << format << std::endl;
-                return 1;
+            if (i + 1 < argc) {
+                std::string format = argv[i + 1];
+                if (format == "raw") {
+                    raw = true;
+                } else if (format == "jpg") {
+                    jpg = true;
+                } else if (format == "png") {
+                    // Dexrn: PNG is already the default, no need to change anything right?
+                } else if (format == "tga") {
+                    tga = true;
+                } else if (format == "bmp") {
+                    bmp = true;
+                } else {
+                    std::cerr << "Error: Unknown format specified: " << format << std::endl;
+                    return 1;
+                }
+                i++;
             }
-            i++;
-        }
         } else if (arg == "--quiet" || arg == "-q") {
             // Dexrn: maybe quiet should be more quiet?
-            quiet = true;  
+            quiet = true;
         } else if (arg == "--really-quiet" || arg == "-Q") {
             reallyquiet = true;
         } else {
@@ -262,10 +262,11 @@ int main(int argc, char* argv[]) {
     // long long int input_size = std::filesystem::file_size(filename);
     int version = QmageDecCommon_GetVersion();
     int opaqueInfo = QmageDecCommon_GetOpaqueInfo(filename.c_str());
+
     if (!reallyquiet) {
-    // Dexrn: Changed these so that it is more clear that we are talking about the library and not QmageDecoder.
-    std::cout << "libQmageDecoder version:" << version << std::endl;
-    std::cout << "libQmageDecoder opaqueInfo:" << opaqueInfo << std::endl;
+        // Dexrn: Changed these so that it is more clear that we are talking about the library and not QmageDecoder.
+        std::cout << "libQmageDecoder version:" << version << std::endl;
+        std::cout << "libQmageDecoder opaqueInfo:" << opaqueInfo << std::endl;
     }
 
     QmageDecoderHeader headerInfo;
@@ -276,8 +277,6 @@ int main(int argc, char* argv[]) {
     int stride = 0;
 
     // Read the header
-    QmageDecoderInfo decoderInfo;
-    QM_BOOL hasDecoderInfo2 = QmageDecCommon_GetDecoderInfo(buffer, fileSize, &decoderInfo);
     QM_BOOL hasHeaderInfo = QmageDecParseHeader(buffer, QM_IO_BUFFER, fileSize, &headerInfo);
     check_error("QmageDecParseHeader");
 
@@ -306,7 +305,10 @@ int main(int argc, char* argv[]) {
         std::cout << "HeaderInfo currentFrameNumber: " << headerInfo.currentFrameNumber << std::endl;
         std::cout << "HeaderInfo Animation_delaytime: " << headerInfo.Animation_delaytime << std::endl;
         std::cout << "HeaderInfo Animation_NoRepeat: " << headerInfo.Animation_NoRepeat << std::endl;
-        check_error("DecoderInfo");
+
+        QmageDecoderInfo decoderInfo;
+        QM_BOOL hasDecoderInfo2 = QmageDecCommon_GetDecoderInfo(buffer, fileSize, &decoderInfo);
+        check_error("QmageDecCommon_GetDecoderInfo");
 
         if (hasDecoderInfo2) {
             QmageImageInfo imageInfo = decoderInfo.imageInfo;
@@ -325,14 +327,13 @@ int main(int argc, char* argv[]) {
             std::cout << "DecoderInfo encoder_mode: " << decoderInfo.encoder_mode << "\n";
             std::cout << "DecoderInfo pAniDecInfo: " << decoderInfo.pAniDecInfo << "\n";
             std::cout << "DecoderInfo AndroidSupport: " << decoderInfo.AndroidSupport << "\n";
-
         }
     }
 
     // TODO What is the correct way to check for animation?
     if (headerInfo.mode != 0 || headerInfo.totalFrameNumber > 1) {
         if (!reallyquiet) {
-        std::cout << "Image is animated" << std::endl;
+            std::cout << "Image is animated" << std::endl;
         }
 
         // Set up the animation decoding context
@@ -358,10 +359,8 @@ int main(int argc, char* argv[]) {
         QmageRawImageType convertedType = getConvertedType(headerInfo.raw_type);
         bool needsConvert = !raw && (headerInfo.raw_type != convertedType);
 
-        if (needsConvert) {
-            if (!reallyquiet) {
+        if (needsConvert && !reallyquiet) {
             std::cout << "Image will be converted from " << getFormatName(headerInfo.raw_type) << " to " << getFormatName(convertedType) << std::endl;
-            }
         }
 
         for (int i = 0; i < headerInfo.totalFrameNumber; i++) {
@@ -427,7 +426,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (!(quiet || reallyquiet)) {
-    std::cout << "Successfully decoded " << headerInfo.totalFrameNumber << " frames from " << filename << std::endl;
+        std::cout << "Successfully decoded " << headerInfo.totalFrameNumber << " frames from " << filename << std::endl;
     }
 
 cleanup:
