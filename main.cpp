@@ -258,6 +258,50 @@ enum Verbosity {
     NORMAL
 };
 
+static bool addFrame(QmageDecoderHeader headerInfo, size_t dimSize, size_t frameSize, int stride, bool needsConvert, QmageRawImageType convertedType, ImageOutputFormat outputFormat, MsfGifState* gifState, int delay, const char* frameBuffer, std::string fileOutName) {
+    // Choose between raw decoded output or converting it if needed
+    char* outBuffer;
+    size_t outBufferSize;
+    size_t channels;
+    bool returnVal;
+
+    if (needsConvert) {
+        channels = typeToBits(convertedType) / 8;
+        outBufferSize = dimSize * channels;
+        outBuffer = new char[outBufferSize];
+        doConvert(headerInfo.raw_type, (const unsigned char*) frameBuffer, (unsigned char*) outBuffer, dimSize);
+    } else {
+        channels = stride;
+        outBuffer = (char*) frameBuffer;
+        outBufferSize = frameSize;
+    }
+
+    if (outputFormat == GIF) {
+        uint8_t* gifBuffer;
+
+        if (channels != 4) {
+            gifBuffer = new uint8_t[dimSize * 4];
+            convertRGB888ToRGBA8888((const unsigned char*) outBuffer, (unsigned char*) gifBuffer, dimSize);
+        } else {
+            gifBuffer = (uint8_t*) outBuffer;
+        }
+
+        returnVal = msf_gif_frame(gifState, gifBuffer, 0, 16, headerInfo.width * 4);
+
+        if ((char*) gifBuffer != outBuffer) {
+            delete[] gifBuffer;
+        }
+    } else {
+        returnVal = writeImageToFile(fileOutName, outputFormat, headerInfo.width, headerInfo.height, channels, outBuffer);
+    }
+
+    if (outBuffer != frameBuffer) {
+        delete[] outBuffer;
+    }
+
+    return returnVal;
+}
+
 // Zero: To the poor soul who looks at this
 // Zero: I do not know C/C++ in my defense
 int main(int argc, char* argv[]) {
@@ -448,7 +492,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    if (aniInfo != nullptr) {
+    {
         // NedTheNerd: TODO: Allow configuring this
         // Dexrn: Did it.
         QmageRawImageType convertedType = getConvertedType(headerInfo.raw_type);
@@ -458,70 +502,49 @@ int main(int argc, char* argv[]) {
             std::cout << "Image will be converted from " << getFormatName(headerInfo.raw_type) << " to " << getFormatName(convertedType) << std::endl;
         }
 
-        for (int i = 0; i < headerInfo.totalFrameNumber; i++) {
-            //NedTheNerd: Decode TODO handle errors
-            //int aniDecodeReturn = QmageDecodeAniFrame(aniInfo, frameBuffer);
-            //std::cout << "QmageDecodeAniFrame return value: " << aniDecodeReturn << std::endl;
-            QmageDecodeAniFrame(aniInfo, frameBuffer);
-            check_error("QmageDecodeAniFrame");
-
-            // Choose between raw decoded output or converting it if needed
-            char* outBuffer;
-            size_t outBufferSize;
-            size_t channels;
-
-            if (needsConvert) {
-                channels = typeToBits(convertedType) / 8;
-                outBufferSize = dimSize * channels;
-                outBuffer = new char[outBufferSize];
-                doConvert(headerInfo.raw_type, (const unsigned char*) frameBuffer, (unsigned char*) outBuffer, dimSize);
-            } else {
-                channels = stride;
-                outBuffer = (char*) frameBuffer;
-                outBufferSize = frameSize;
-            }
-
-            if (outputFormat == GIF) {
-                uint8_t* gifBuffer;
-
-                if (channels != 4) {
-                    gifBuffer = new uint8_t[dimSize * 4];
-                    convertRGB888ToRGBA8888((const unsigned char*) outBuffer, (unsigned char*) gifBuffer, dimSize);
-                } else {
-                    gifBuffer = (uint8_t*) outBuffer;
-                }
-
-                if (!msf_gif_frame(&gifState, gifBuffer, 0, 16, headerInfo.width * 4)) {
-                    returnVal = 1;
-                    std::cerr << "Error: Could not write frame " << i + 1 << std::endl;
-                } else if (verbosityLevel > QUIET) {
-                    std::cout << "Wrote frame " << i + 1 << std::endl;
-                }
-
-                if ((char*) gifBuffer != outBuffer) {
-                    delete[] gifBuffer;
-                }
-            } else {
+        if (aniInfo != nullptr) {
+            for (int i = 0; i < headerInfo.totalFrameNumber; i++) {
+                //NedTheNerd: Decode TODO handle errors
+                //int aniDecodeReturn = QmageDecodeAniFrame(aniInfo, frameBuffer);
+                //std::cout << "QmageDecodeAniFrame return value: " << aniDecodeReturn << std::endl;
+                QmageDecodeAniFrame(aniInfo, frameBuffer);
+                check_error("QmageDecodeAniFrame");
                 int fileNum = i + 1;
                 std::string fileOutName = filename + "_frame-" + std::to_string(fileNum) + getExtensionForOutputFormat(outputFormat);
-
-                if (!writeImageToFile(fileOutName, outputFormat, headerInfo.width, headerInfo.height, channels, outBuffer)) {
-                    returnVal = 1;
-                    std::cerr << "Error: Could not write frame " << fileNum << " to file " << fileOutName << std::endl;
+                if (!addFrame(headerInfo, dimSize, frameSize, stride, needsConvert, convertedType, outputFormat, &gifState, 0, frameBuffer, fileOutName)) {
+                    if (outputFormat == GIF) {
+                        std::cerr << "Error: Could not write frame " << fileNum << std::endl;
+                    } else {
+                        std::cerr << "Error: Could not write frame " << fileNum << " to file " << fileOutName << std::endl;
+                    }
                 } else if (verbosityLevel > QUIET) {
-                    // Dexrn: had to escape the () otherwise it wouldn't be included in the output
+                    if (outputFormat == GIF) {
+                        std::cout << "Wrote frame " << fileNum << std::endl;
+                    } else {
+                        std::cout << "Wrote frame " << fileNum << " to \"" << fileOutName << "\"" << std::endl;
+                    }
+                }
+            }
+        } else {
+            //NedTheNerd: Decode TODO handle errors
+            QmageDecodeFrame(buffer, fileSize, frameBuffer);
+            check_error("QmageDecodeFrame");
+            int fileNum = 1;
+            std::string fileOutName = filename + "_frame-" + std::to_string(fileNum) + getExtensionForOutputFormat(outputFormat);
+            if (!addFrame(headerInfo, dimSize, frameSize, stride, needsConvert, convertedType, outputFormat, &gifState, 0, frameBuffer, fileOutName)) {
+                if (outputFormat == GIF) {
+                    std::cerr << "Error: Could not write frame " << fileNum << std::endl;
+                } else {
+                    std::cerr << "Error: Could not write frame " << fileNum << " to file " << fileOutName << std::endl;
+                }
+            } else if (verbosityLevel > QUIET) {
+                if (outputFormat == GIF) {
+                    std::cout << "Wrote frame " << fileNum << std::endl;
+                } else {
                     std::cout << "Wrote frame " << fileNum << " to \"" << fileOutName << "\"" << std::endl;
                 }
             }
-
-            if (outBuffer != frameBuffer) {
-                delete[] outBuffer;
-            }
         }
-    } else {
-        std::cerr << "Error: TODO support for non-animated images" << std::endl;
-        returnVal = 1;
-        goto cleanup;
     }
 
     if (verbosityLevel > QUIET) {
