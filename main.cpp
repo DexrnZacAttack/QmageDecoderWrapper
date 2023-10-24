@@ -258,6 +258,7 @@ enum Verbosity {
     NORMAL
 };
 
+// Either add a frame to an animated gif, or write it to a file
 static bool addFrame(QmageDecoderHeader headerInfo, size_t dimSize, size_t frameSize, int stride, bool needsConvert, QmageRawImageType convertedType, ImageOutputFormat outputFormat, MsfGifState* gifState, int delay, const char* frameBuffer, std::string fileOutName) {
     // Choose between raw decoded output or converting it if needed
     char* outBuffer;
