@@ -237,8 +237,36 @@ static bool writeBytesToFile(const char* fileName, char* data, size_t size) {
 
 static bool writeImageToFile(std::string fileOutName, ImageOutputFormat format, int width, int height, int channels, char* imageData) {
     switch (format) {
-        case GIF:
-            return false;
+        case GIF: {
+            MsfGifState gifState = {};
+
+            if (!msf_gif_begin(&gifState, width, height)) {
+                return false;
+            }
+
+            uint8_t* gifBuffer;
+
+            if (channels != 4) {
+                gifBuffer = new uint8_t[width * height * 4];
+                convertRGB888ToRGBA8888((const unsigned char*) imageData, (unsigned char*) gifBuffer, width * height);
+            } else {
+                gifBuffer = (uint8_t*) imageData;
+            }
+
+            bool returnVal = msf_gif_frame(&gifState, gifBuffer, 0, 16, width * 4);
+
+            if ((char*) gifBuffer != imageData) {
+                delete[] gifBuffer;
+            }
+
+            if (returnVal) {
+                MsfGifResult result = msf_gif_end(&gifState);
+                returnVal = result.data && writeBytesToFile(fileOutName.c_str(), (char*) result.data, result.dataSize);
+                msf_gif_free(result);
+            }
+
+            return returnVal;
+        }
         case PNG:
             return stbi_write_png(fileOutName.c_str(), width, height, channels, imageData, width * channels);
         case JPG:
