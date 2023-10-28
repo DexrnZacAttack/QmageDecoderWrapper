@@ -315,7 +315,7 @@ static bool addFrame(QmageDecoderHeader headerInfo, size_t dimSize, size_t frame
             gifBuffer = (uint8_t*) outBuffer;
         }
 
-        returnVal = msf_gif_frame(gifState, gifBuffer, 0, 16, headerInfo.width * 4);
+        returnVal = msf_gif_frame(gifState, gifBuffer, delay, 16, headerInfo.width * 4);
 
         if ((char*) gifBuffer != outBuffer) {
             delete[] gifBuffer;
