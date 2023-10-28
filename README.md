@@ -39,8 +39,9 @@ LD_LIBRARY_PATH="../lib/:" ./main.o -h
 
 # Contributors
 - [DexrnZacAttack](https://github.com/DexrnZacAttack)
-- [Zero_DSRS_VX](https://github.com/PhoenixVX)
 - [NerdTheNed](https://github.com/NeRdTheNed)
+- [Zero_DSRS_VX](https://github.com/PhoenixVX)
+- [CarPBon](https://github.com/CarPBon) (For providing ARM hardware to build and test on)
 - [vlOd2](https://github.com/vlOd2)
 - [Boreal](https://github.com/bor-real)
 
