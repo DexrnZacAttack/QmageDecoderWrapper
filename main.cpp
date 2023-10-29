@@ -562,19 +562,27 @@ int main(int argc, char* argv[]) {
 
         if (aniInfo != nullptr) {
             for (int i = 0; i < headerInfo.totalFrameNumber; i++) {
-                //NedTheNerd: Decode TODO handle errors
-                //int aniDecodeReturn = QmageDecodeAniFrame(aniInfo, frameBuffer);
-                //std::cout << "QmageDecodeAniFrame return value: " << aniDecodeReturn << std::endl;
-                QmageDecodeAniFrame(aniInfo, frameBuffer);
+                //NedTheNerd: Decode
+                int aniDecodeReturn = QmageDecodeAniFrame(aniInfo, frameBuffer);
                 check_error("QmageDecodeAniFrame");
+
+                if (aniDecodeReturn < 0) {
+                    std::cerr << "QmageDecodeAniFrame returned error " << getDecodeErrorName((QmageDecoderError) aniDecodeReturn) << std::endl;
+                    returnVal = 1;
+                } else if (aniDecodeReturn == 0 && verbosityLevel > QUIET) {
+                    std::cout << "Last frame" << std::endl;
+                }
+
                 int fileNum = i + 1;
                 std::string fileOutName = filename + "_frame-" + std::to_string(fileNum) + getExtensionForOutputFormat(outputFormat);
+
                 if (!addFrame(headerInfo, dimSize, frameSize, stride, needsConvert, convertedType, outputFormat, &gifState, 0, frameBuffer, fileOutName)) {
                     if (outputFormat == GIF) {
                         std::cerr << "Error: Could not write frame " << fileNum << std::endl;
                     } else {
                         std::cerr << "Error: Could not write frame " << fileNum << " to file " << fileOutName << std::endl;
                     }
+                    returnVal = 1;
                 } else if (verbosityLevel > QUIET) {
                     if (outputFormat == GIF) {
                         std::cout << "Wrote frame " << fileNum << std::endl;
@@ -582,19 +590,32 @@ int main(int argc, char* argv[]) {
                         std::cout << "Wrote frame " << fileNum << " to \"" << fileOutName << "\"" << std::endl;
                     }
                 }
+
+                if (aniDecodeReturn == 0) {
+                    break;
+                }
             }
         } else {
-            //NedTheNerd: Decode TODO handle errors
-            QmageDecodeFrame(buffer, fileSize, frameBuffer);
+            //NedTheNerd: Decode
+            int decodeReturn = QmageDecodeFrame(buffer, fileSize, frameBuffer);
             check_error("QmageDecodeFrame");
+
+            if (decodeReturn < 0) {
+                std::cerr << "QmageDecodeFrame returned error " << getDecodeErrorName((QmageDecoderError) decodeReturn) << std::endl;
+                returnVal = 1;
+                goto cleanup;
+            }
+
             int fileNum = 1;
             std::string fileOutName = filename + "_frame-" + std::to_string(fileNum) + getExtensionForOutputFormat(outputFormat);
+
             if (!addFrame(headerInfo, dimSize, frameSize, stride, needsConvert, convertedType, outputFormat, &gifState, 0, frameBuffer, fileOutName)) {
                 if (outputFormat == GIF) {
                     std::cerr << "Error: Could not write frame " << fileNum << std::endl;
                 } else {
                     std::cerr << "Error: Could not write frame " << fileNum << " to file " << fileOutName << std::endl;
                 }
+                returnVal = 1;
             } else if (verbosityLevel > QUIET) {
                 if (outputFormat == GIF) {
                     std::cout << "Wrote frame " << fileNum << std::endl;
