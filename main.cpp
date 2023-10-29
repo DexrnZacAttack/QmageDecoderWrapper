@@ -611,18 +611,6 @@ int main(int argc, char* argv[]) {
 
 cleanup:
 
-    if (aniInfo != nullptr) {
-        QmageDecDestroyAniInfo(aniInfo);
-    }
-
-    if (buffer != nullptr) {
-        delete[] buffer;
-    }
-
-    if (frameBuffer != nullptr) {
-        delete[] frameBuffer;
-    }
-
     if (outputFormat == GIF) {
         std::string outFileName = filename + ".gif";
         MsfGifResult result = msf_gif_end(&gifState);
@@ -635,6 +623,18 @@ cleanup:
         }
 
         msf_gif_free(result);
+    }
+
+    if (aniInfo != nullptr) {
+        QmageDecDestroyAniInfo(aniInfo);
+    }
+
+    if (buffer != nullptr) {
+        delete[] buffer;
+    }
+
+    if (frameBuffer != nullptr) {
+        delete[] frameBuffer;
     }
 
     return returnVal;
