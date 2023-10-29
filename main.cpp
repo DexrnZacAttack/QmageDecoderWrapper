@@ -193,10 +193,39 @@ static void doConvert(QmageRawImageType from, const unsigned char* input, unsign
     }
 }
 
+static std::string getDecodeErrorName(QmageDecoderError err) {
+    switch (err) {
+        case QM_DEC_ANI_END_OF_FRAME:
+            return "QM_DEC_ANI_END_OF_FRAME";
+        case QM_DEC_ANI_NOT_ENOUGH_DATA:
+            return "QM_DEC_ANI_NOT_ENOUGH_DATA";
+        case QM_DEC_ANI_FAIL:
+            return "QM_DEC_ANI_FAIL";
+        case QM_DEC_INVALID_SIZE:
+            return "QM_DEC_INVALID_SIZE";
+        case QM_DEC_INVALID_ADDRESS:
+            return "QM_DEC_INVALID_ADDRESS";
+        case QM_DEC_OUT_OF_MEMORY:
+            return "QM_DEC_OUT_OF_MEMORY";
+        case QM_DEC_UNSUPPORTED_VERSION:
+            return "QM_DEC_UNSUPPORTED_VERSION";
+        case QM_DEC_UNSUPPORTED_TYPE:
+            return "QM_DEC_UNSUPPORTED_TYPE";
+        case QM_DEC_UNSUPPORTED_FILE:
+            return "QM_DEC_UNSUPPORTED_FILE";
+        case QM_DEC_CORRUPTED_FILE:
+            return "QM_DEC_CORRUPTED_FILE";
+        case QM_DEC_FAIL:
+            return "QM_DEC_FAIL";
+        default:
+            return std::to_string(err);
+    }
+}
+
 void check_error(const char* message) {
     QmageDecoderError decoderError = QmageDecGetLastErr();
     if (decoderError != 0) {
-        std::cerr << "[" << message << "] " << decoderError << std::endl;
+        std::cerr << "[" << message << "] " << getDecodeErrorName(decoderError) << std::endl;
     }
 }
 
