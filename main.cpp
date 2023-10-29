@@ -76,7 +76,7 @@ static void convertARGB8888ToRGBA8888(const unsigned char* input, unsigned char*
     }
 }
 
-// Converts an image in BGRA8888 format to RGBA8888 format TODO test
+// Converts an image in BGRA8888 format to RGBA8888 format
 static void convertBGRA8888ToRGB888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
     for (size_t i = 0; i < amountPixels; i++) {
         unsigned char b = *(input++);
