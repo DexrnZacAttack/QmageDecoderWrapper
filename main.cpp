@@ -343,7 +343,8 @@ static bool writeImageToFile(std::string fileOutName, ImageOutputFormat format, 
 enum Verbosity {
     REALLY_QUIET,
     QUIET,
-    NORMAL
+    NORMAL,
+    VERBOSE
 };
 
 // Either add a frame to an animated gif, or write it to a file
@@ -417,7 +418,7 @@ static void printDecInfo(QmageDecoderInfo decoderInfo) {
 #endif
 
 // Print info about the Qmage header at the start of the buffer
-static bool printHeaderInfo(const char* buffer, size_t size, QmageDecAniInfo* aniInfo) {
+static bool printHeaderInfo(const char* buffer, std::streampos size, QmageDecAniInfo* aniInfo) {
     QmageDecoderHeader headerInfo;
     // Read the header
     QM_BOOL hasHeaderInfo = QmageDecParseHeader(buffer, QM_IO_BUFFER, size, &headerInfo);
@@ -493,6 +494,7 @@ int main(int argc, char* argv[]) {
             std::cout << "  -f, --format: Outputs the frames in the format specified.\n  Supported formats are: raw, png (default), jpg, tga, bmp, and animated gif." << std::endl;
             std::cout << "  -q, --quiet: Doesn't stdcout every written file." << std::endl;  // Dexrn: I'm sure I could phrase this better lmao
             std::cout << "  -Q, --really-quiet: Doesn't stdcout anything." << std::endl;
+            std::cout << "  -v, --verbose: Print additional information about each frame during decoding." << std::endl;
             std::cout << "GitHub Repo: https://github.com/DexrnZacAttack/QmageDecoder" << std::endl;
             return 0;
             // Dexrn: yes I know this looks like hell...
@@ -524,6 +526,8 @@ int main(int argc, char* argv[]) {
             verbosityLevel = QUIET;
         } else if (arg == "--really-quiet" || arg == "-Q") {
             verbosityLevel = REALLY_QUIET;
+        } else if (arg == "--verbose" || arg == "-v") {
+            verbosityLevel = VERBOSE;
         } else {
             // Dexrn: if no options are specified, assume it a file has been passed in.
             filename = arg;
@@ -635,7 +639,13 @@ int main(int argc, char* argv[]) {
         }
 
         if (aniInfo != nullptr) {
+            std::streampos filePos = 0;
+
             for (int i = 0; i < headerInfo.totalFrameNumber; i++) {
+                if (verbosityLevel >= VERBOSE) {
+                    printHeaderInfo(buffer + filePos, fileSize - filePos, aniInfo);
+                }
+
                 //NedTheNerd: Decode
                 int aniDecodeReturn = QmageDecodeAniFrame(aniInfo, frameBuffer);
                 check_error("QmageDecodeAniFrame");
@@ -645,6 +655,8 @@ int main(int argc, char* argv[]) {
                     returnVal = 1;
                 } else if (aniDecodeReturn == 0 && verbosityLevel > QUIET) {
                     std::cout << "Last frame" << std::endl;
+                } else if (aniDecodeReturn > 0) {
+                    filePos += aniDecodeReturn;
                 }
 
                 int fileNum = i + 1;
