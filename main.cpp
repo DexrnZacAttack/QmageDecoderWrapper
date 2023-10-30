@@ -390,6 +390,68 @@ static bool addFrame(QmageDecoderHeader headerInfo, size_t dimSize, size_t frame
     return returnVal;
 }
 
+// Print info about the Qmage header at the start of the buffer
+static bool printHeaderInfo(const char* buffer, size_t size) {
+    QmageDecoderHeader headerInfo;
+    // Read the header
+    QM_BOOL hasHeaderInfo = QmageDecParseHeader(buffer, QM_IO_BUFFER, size, &headerInfo);
+    check_error("QmageDecParseHeader");
+
+    if (!hasHeaderInfo) {
+        std::cerr << "Error: QmageDecParseHeader failed" << std::endl;
+        return false;
+    }
+
+    std::cout << "\nQmageDecoderInfo" << std::endl;
+    std::cout << "HeaderInfo mode: " << headerInfo.mode << std::endl;
+    std::cout << "HeaderInfo width: " << headerInfo.width << std::endl;
+    std::cout << "HeaderInfo height: " << headerInfo.height << std::endl;
+    std::cout << "HeaderInfo padding: " << headerInfo.padding << std::endl;
+    std::cout << "HeaderInfo raw_type: " << getFormatName(headerInfo.raw_type) << std::endl;
+    std::cout << "HeaderInfo transparency: " << headerInfo.transparency << std::endl;
+    std::cout << "HeaderInfo NinePatched: " << headerInfo.NinePatched << std::endl;
+    std::cout << "HeaderInfo IsOpaque: " << headerInfo.IsOpaque << std::endl;
+    std::cout << "HeaderInfo premultiplied: " << headerInfo.premultiplied << std::endl;
+    std::cout << "HeaderInfo ColorCount: " << headerInfo.ColorCount << std::endl;
+    std::cout << "HeaderInfo UseIndexedColor: " << headerInfo.UseIndexedColor << std::endl;
+    std::cout << "HeaderInfo isGrayColor: " << headerInfo.isGrayColor << std::endl;
+    std::cout << "HeaderInfo rgba_order: " << headerInfo.rgba_order << std::endl;
+    std::cout << "HeaderInfo totalFrameNumber: " << headerInfo.totalFrameNumber << std::endl;
+    std::cout << "HeaderInfo currentFrameNumber: " << headerInfo.currentFrameNumber << std::endl;
+    std::cout << "HeaderInfo Animation_delaytime: " << headerInfo.Animation_delaytime << std::endl;
+    std::cout << "HeaderInfo Animation_NoRepeat: " << headerInfo.Animation_NoRepeat << std::endl;
+
+#ifdef USE_INTERNAL_FUNCTIONS
+    QmageDecoderInfo decoderInfo;
+    QM_BOOL hasDecoderInfo2 = QmageDecCommon_GetDecoderInfo(buffer, size, &decoderInfo);
+    check_error("QmageDecCommon_GetDecoderInfo");
+
+    if (!hasDecoderInfo2) {
+        std::cerr << "Error: QmageDecCommon_GetDecoderInfo failed" << std::endl;
+        return false;
+    }
+
+    QmageImageInfo imageInfo = decoderInfo.imageInfo;
+    std::cout << "\nQmageDecoderHeader" << std::endl;
+    std::cout << "DecoderInfo imageInfo bpp: " << imageInfo.bpp << "\n";
+    std::cout << "DecoderInfo imageInfo PaddingValue: " << imageInfo.PaddingValue << "\n";
+    std::cout << "DecoderInfo imageInfo raw_type: " << getFormatName(imageInfo.raw_type) << "\n";
+    std::cout << "DecoderInfo imageInfo img_type: " << imageInfo.img_type << "\n";
+    std::cout << "DecoderInfo header_len: " << decoderInfo.header_len << "\n";
+    std::cout << "DecoderInfo alpha_position: " << decoderInfo.alpha_position << "\n";
+    std::cout << "DecoderInfo Animation: " << decoderInfo.Animation << "\n";
+    std::cout << "DecoderInfo is_alpha_InOrgImage: " << decoderInfo.is_alpha_InOrgImage << "\n";
+    std::cout << "DecoderInfo Use_chromakey: " << decoderInfo.Use_chromakey << "\n";
+    std::cout << "DecoderInfo qp: " << decoderInfo.qp << "\n";
+    std::cout << "DecoderInfo endian: " << decoderInfo.endian << "\n";
+    std::cout << "DecoderInfo encoder_mode: " << getEncoderCodecName(decoderInfo.encoder_mode) << "\n";
+    std::cout << "DecoderInfo pAniDecInfo: " << decoderInfo.pAniDecInfo << "\n";
+    std::cout << "DecoderInfo AndroidSupport: " << decoderInfo.AndroidSupport << "\n";
+#endif
+
+    return true;
+}
+
 // Zero: To the poor soul who looks at this
 // Zero: I do not know C/C++ in my defense
 int main(int argc, char* argv[]) {
@@ -504,49 +566,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (verbosityLevel > REALLY_QUIET) {
-        std::cout << "\nQmageDecoderInfo" << std::endl;
-        std::cout << "HeaderInfo mode: " << headerInfo.mode << std::endl;
-        std::cout << "HeaderInfo width: " << headerInfo.width << std::endl;
-        std::cout << "HeaderInfo height: " << headerInfo.height << std::endl;
-        std::cout << "HeaderInfo padding: " << headerInfo.padding << std::endl;
-        std::cout << "HeaderInfo raw_type: " << getFormatName(headerInfo.raw_type) << std::endl;
-        std::cout << "HeaderInfo transparency: " << headerInfo.transparency << std::endl;
-        std::cout << "HeaderInfo NinePatched: " << headerInfo.NinePatched << std::endl;
-        std::cout << "HeaderInfo IsOpaque: " << headerInfo.IsOpaque << std::endl;
-        std::cout << "HeaderInfo premultiplied: " << headerInfo.premultiplied << std::endl;
-        std::cout << "HeaderInfo ColorCount: " << headerInfo.ColorCount << std::endl;
-        std::cout << "HeaderInfo UseIndexedColor: " << headerInfo.UseIndexedColor << std::endl;
-        std::cout << "HeaderInfo isGrayColor: " << headerInfo.isGrayColor << std::endl;
-        std::cout << "HeaderInfo rgba_order: " << headerInfo.rgba_order << std::endl;
-        std::cout << "HeaderInfo totalFrameNumber: " << headerInfo.totalFrameNumber << std::endl;
-        std::cout << "HeaderInfo currentFrameNumber: " << headerInfo.currentFrameNumber << std::endl;
-        std::cout << "HeaderInfo Animation_delaytime: " << headerInfo.Animation_delaytime << std::endl;
-        std::cout << "HeaderInfo Animation_NoRepeat: " << headerInfo.Animation_NoRepeat << std::endl;
-
-#ifdef USE_INTERNAL_FUNCTIONS
-        QmageDecoderInfo decoderInfo;
-        QM_BOOL hasDecoderInfo2 = QmageDecCommon_GetDecoderInfo(buffer, fileSize, &decoderInfo);
-        check_error("QmageDecCommon_GetDecoderInfo");
-
-        if (hasDecoderInfo2) {
-            QmageImageInfo imageInfo = decoderInfo.imageInfo;
-            std::cout << "\nQmageDecoderHeader" << std::endl;
-            std::cout << "DecoderInfo imageInfo bpp: " << imageInfo.bpp << "\n";
-            std::cout << "DecoderInfo imageInfo PaddingValue: " << imageInfo.PaddingValue << "\n";
-            std::cout << "DecoderInfo imageInfo raw_type: " << getFormatName(imageInfo.raw_type) << "\n";
-            std::cout << "DecoderInfo imageInfo img_type: " << imageInfo.img_type << "\n";
-            std::cout << "DecoderInfo header_len: " << decoderInfo.header_len << "\n";
-            std::cout << "DecoderInfo alpha_position: " << decoderInfo.alpha_position << "\n";
-            std::cout << "DecoderInfo Animation: " << decoderInfo.Animation << "\n";
-            std::cout << "DecoderInfo is_alpha_InOrgImage: " << decoderInfo.is_alpha_InOrgImage << "\n";
-            std::cout << "DecoderInfo Use_chromakey: " << decoderInfo.Use_chromakey << "\n";
-            std::cout << "DecoderInfo qp: " << decoderInfo.qp << "\n";
-            std::cout << "DecoderInfo endian: " << decoderInfo.endian << "\n";
-            std::cout << "DecoderInfo encoder_mode: " << getEncoderCodecName(decoderInfo.encoder_mode) << "\n";
-            std::cout << "DecoderInfo pAniDecInfo: " << decoderInfo.pAniDecInfo << "\n";
-            std::cout << "DecoderInfo AndroidSupport: " << decoderInfo.AndroidSupport << "\n";
-        }
-#endif
+        printHeaderInfo(buffer, fileSize);
     }
 
     // TODO What is the correct way to check for animation?
