@@ -15,6 +15,36 @@
 // Comment this out to only use public functions from libQmageDecoder
 #define USE_INTERNAL_FUNCTIONS
 
+// Returns the name of a encoder codec
+static std::string getEncoderCodecName(QmageDecodeCodecType codec) {
+    switch (codec) {
+        case QMAGE_DEC_V16_SHORT_INDEX:
+            return "QMAGE_DEC_V16_SHORT_INDEX";
+        case QMAGE_DEC_W2_PASS:
+            return "QMAGE_DEC_W2_PASS";
+        case QMAGE_DEC_V16_BYTE_INDEX:
+            return "QMAGE_DEC_V16_BYTE_INDEX";
+        case QMAGE_DEC_W1_PASS:
+            return "QMAGE_DEC_W1_PASS";
+        case QMAGE_DEC_FCODEC:
+            return "QMAGE_DEC_FCODEC";
+        case QMAGE_DEC_W1_PASS_FROM_W_ADAPTIVE:
+            return "QMAGE_DEC_W1_PASS_FROM_W_ADAPTIVE";
+        case QMAGE_DEC_V24_SHORT_INDEX:
+            return "QMAGE_DEC_V24_SHORT_INDEX";
+        case QMAGE_DEC_W2_PASS_ONLY:
+            return "QMAGE_DEC_W2_PASS_ONLY";
+        case QMAGE_DEC_PV:
+            return "QMAGE_DEC_PV";
+        case QMAGE_DEC_SLV:
+            return "QMAGE_DEC_SLV";
+        case QMAGE_DEC_QV:
+            return "QMAGE_DEC_QV";
+        default:
+            return std::to_string(codec);
+    }
+}
+
 // Converts an image in RGB565 format to RGB888 format
 static void convertRGB565ToRGB888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
     for (size_t i = 0; i < amountPixels; i++) {
@@ -512,7 +542,7 @@ int main(int argc, char* argv[]) {
             std::cout << "DecoderInfo Use_chromakey: " << decoderInfo.Use_chromakey << "\n";
             std::cout << "DecoderInfo qp: " << decoderInfo.qp << "\n";
             std::cout << "DecoderInfo endian: " << decoderInfo.endian << "\n";
-            std::cout << "DecoderInfo encoder_mode: " << decoderInfo.encoder_mode << "\n";
+            std::cout << "DecoderInfo encoder_mode: " << getEncoderCodecName(decoderInfo.encoder_mode) << "\n";
             std::cout << "DecoderInfo pAniDecInfo: " << decoderInfo.pAniDecInfo << "\n";
             std::cout << "DecoderInfo AndroidSupport: " << decoderInfo.AndroidSupport << "\n";
         }
