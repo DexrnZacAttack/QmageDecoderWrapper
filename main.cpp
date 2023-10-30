@@ -45,6 +45,59 @@ static std::string getEncoderCodecName(QmageDecodeCodecType codec) {
     }
 }
 
+// Returns the name of a decoder version
+static std::string getDecoderVersionName(Qmage_DecoderVersion version) {
+    switch (version) {
+        case QM_DEC_QMAGE_VER_1_43_LESS:
+            return "QM_DEC_QMAGE_VER_1_43_LESS";
+        case QM_DEC_QMAGE_VER_1_43_MORE:
+            return "QM_DEC_QMAGE_VER_1_43_MORE";
+        case QM_DEC_QMAGE_VER_1_70:
+            return "QM_DEC_QMAGE_VER_1_70";
+        case 14:
+        case 15:
+            return "Known unnamed version " + std::to_string(version);
+        default:
+            return "Unknown version " + std::to_string(version);
+    }
+}
+
+// Returns the name of a V decoder version
+static std::string getVDecoderVersionName(Qmage_V_DecoderVersion version) {
+    switch (version) {
+        case QM_DEC_VCODEC_VER_2_00:
+            return "QM_DEC_VCODEC_VER_2_00";
+        case QM_DEC_VCODEC_VER_2_00_T:
+            return "QM_DEC_VCODEC_VER_2_00_T";
+        case QM_DEC_VCODEC_VER_3_00_TAG_LESS_5:
+            return "QM_DEC_VCODEC_VER_3_00_TAG_LESS_5";
+        case QM_DEC_VCODEC_VER_3_00_TAG_MORE_5:
+            return "QM_DEC_VCODEC_VER_3_00_TAG_MORE_5";
+        case QM_DEC_VCODEC_VER_3_00_11_EXCLUSIVE_OR:
+            return "QM_DEC_VCODEC_VER_3_00_11_EXCLUSIVE_OR";
+        case QM_DEC_VCODEC_VER_3_01_TAG_LESS_5:
+            return "QM_DEC_VCODEC_VER_3_01_TAG_LESS_5";
+        case QM_DEC_VCODEC_VER_3_01_TAG_MORE_5:
+            return "QM_DEC_VCODEC_VER_3_01_TAG_MORE_5";
+        case QM_DEC_VCODEC_VER_3_01_QMAGE_1_01:
+            return "QM_DEC_VCODEC_VER_3_01_QMAGE_1_01";
+        default:
+            return "Unknown v version " + std::to_string(version);
+    }
+}
+
+// Returns the name of a F decoder version
+static std::string getFDecoderVersionName(Qmage_F_DecoderVersion version) {
+    switch (version) {
+        case QM_DEC_FCODEC_VER_1_00:
+            return "QM_DEC_FCODEC_VER_1_00";
+        case QM_DEC_FCODEC_VER_1_00_QMAGE_1_01:
+            return "QM_DEC_FCODEC_VER_1_00_QMAGE_1_01";
+        default:
+            return "Unknown f version " + std::to_string(version);
+    }
+}
+
 // Converts an image in RGB565 format to RGB888 format
 static void convertRGB565ToRGB888(const unsigned char* input, unsigned char* output, size_t amountPixels) {
     for (size_t i = 0; i < amountPixels; i++) {
@@ -414,6 +467,12 @@ static void printDecInfo(QmageDecoderInfo decoderInfo) {
     std::cout << "DecoderInfo encoder_mode: " << getEncoderCodecName(decoderInfo.encoder_mode) << "\n";
     std::cout << "DecoderInfo pAniDecInfo: " << decoderInfo.pAniDecInfo << "\n";
     std::cout << "DecoderInfo AndroidSupport: " << decoderInfo.AndroidSupport << "\n";
+
+    Qmage_DecderLowInfo lowInfo = decoderInfo.DecLowInfo;
+
+    std::cout << "DecoderInfo DecLowInfo qversion: " << getDecoderVersionName(lowInfo.qversion) << "\n";
+    std::cout << "DecoderInfo DecLowInfo vversion: " << getVDecoderVersionName(lowInfo.vversion) << "\n";
+    std::cout << "DecoderInfo DecLowInfo fversion: " << getFDecoderVersionName(lowInfo.fversion) << "\n";
 }
 #endif
 
