@@ -260,6 +260,7 @@ void check_error(const char* message) {
 }
 
 enum ImageOutputFormat {
+    NONE = -1,
     RAW,
     PNG,
     JPG,
@@ -347,6 +348,10 @@ enum Verbosity {
 
 // Either add a frame to an animated gif, or write it to a file
 static bool addFrame(QmageDecoderHeader headerInfo, size_t dimSize, size_t frameSize, int stride, bool needsConvert, QmageRawImageType convertedType, ImageOutputFormat outputFormat, MsfGifState* gifState, int delay, const char* frameBuffer, std::string fileOutName) {
+    if (outputFormat == NONE) {
+        return true;
+    }
+
     // Choose between raw decoded output or converting it if needed
     char* outBuffer;
     size_t outBufferSize;
@@ -494,7 +499,9 @@ int main(int argc, char* argv[]) {
         } else if (arg == "--format" || arg == "-f") {
             if (i + 1 < argc) {
                 std::string format = argv[i + 1];
-                if (format == "raw") {
+                if (format == "none") {
+                    outputFormat = NONE;
+                } else if (format == "raw") {
                     outputFormat = RAW;
                 } else if (format == "jpg" || format == "jpeg") {
                     outputFormat = JPG;
@@ -621,7 +628,7 @@ int main(int argc, char* argv[]) {
         // NedTheNerd: TODO: Allow configuring this
         // Dexrn: Did it.
         QmageRawImageType convertedType = getConvertedType(headerInfo.raw_type);
-        bool needsConvert = (outputFormat != RAW) && (headerInfo.raw_type != convertedType);
+        bool needsConvert = (outputFormat > RAW) && (headerInfo.raw_type != convertedType);
 
         if (needsConvert && (verbosityLevel > REALLY_QUIET)) {
             std::cout << "Image will be converted from " << getFormatName(headerInfo.raw_type) << " to " << getFormatName(convertedType) << std::endl;
@@ -650,7 +657,7 @@ int main(int argc, char* argv[]) {
                         std::cerr << "Error: Could not write frame " << fileNum << " to file " << fileOutName << std::endl;
                     }
                     returnVal = 1;
-                } else if (verbosityLevel > QUIET) {
+                } else if (verbosityLevel > QUIET && outputFormat != NONE) {
                     if (outputFormat == GIF) {
                         std::cout << "Wrote frame " << fileNum << std::endl;
                     } else {
@@ -683,7 +690,7 @@ int main(int argc, char* argv[]) {
                     std::cerr << "Error: Could not write frame " << fileNum << " to file " << fileOutName << std::endl;
                 }
                 returnVal = 1;
-            } else if (verbosityLevel > QUIET) {
+            } else if (verbosityLevel > QUIET && outputFormat != NONE) {
                 if (outputFormat == GIF) {
                     std::cout << "Wrote frame " << fileNum << std::endl;
                 } else {
