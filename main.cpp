@@ -533,7 +533,7 @@ int main(int argc, char* argv[]) {
             std::cout << "\nQmageDecoderHeader" << std::endl;
             std::cout << "DecoderInfo imageInfo bpp: " << imageInfo.bpp << "\n";
             std::cout << "DecoderInfo imageInfo PaddingValue: " << imageInfo.PaddingValue << "\n";
-            std::cout << "DecoderInfo imageInfo raw_type: " << imageInfo.raw_type << "\n";
+            std::cout << "DecoderInfo imageInfo raw_type: " << getFormatName(imageInfo.raw_type) << "\n";
             std::cout << "DecoderInfo imageInfo img_type: " << imageInfo.img_type << "\n";
             std::cout << "DecoderInfo header_len: " << decoderInfo.header_len << "\n";
             std::cout << "DecoderInfo alpha_position: " << decoderInfo.alpha_position << "\n";
