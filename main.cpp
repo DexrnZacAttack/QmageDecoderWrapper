@@ -41,7 +41,7 @@ static std::string getEncoderCodecName(QmageDecodeCodecType codec) {
         case QMAGE_DEC_QV:
             return "QMAGE_DEC_QV";
         default:
-            return std::to_string(codec);
+            return "Unknown encoder codec " + std::to_string(codec);
     }
 }
 
@@ -56,9 +56,9 @@ static std::string getDecoderVersionName(Qmage_DecoderVersion version) {
             return "QM_DEC_QMAGE_VER_1_70";
         case 14:
         case 15:
-            return "Known unnamed version " + std::to_string(version);
+            return "Known unnamed q version " + std::to_string(version);
         default:
-            return "Unknown version " + std::to_string(version);
+            return "Unknown q version " + std::to_string(version);
     }
 }
 
@@ -206,9 +206,9 @@ static int typeToBits(QmageRawImageType type) {
         case QM_RAW_ARGB8888:
         case QM_RAW_RGBA8888:
         case QM_RAW_BGRA8888:
-            return 32;
+        // TODO handle unknown formats better
         default:
-            return 0;
+            return 32;
     }
 }
 
@@ -231,7 +231,7 @@ static std::string getFormatName(QmageRawImageType type) {
         case QM_RAW_BGRA8888:
             return "BGRA8888";
         default:
-            return "???";
+            return "Unknown pixel format " + std::to_string(type);
     }
 }
 
@@ -301,7 +301,7 @@ static std::string getDecodeErrorName(QmageDecoderError err) {
         case QM_DEC_FAIL:
             return "QM_DEC_FAIL";
         default:
-            return std::to_string(err);
+            return "Unknown error code " + std::to_string(err);
     }
 }
 
