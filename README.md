@@ -39,7 +39,7 @@ LD_LIBRARY_PATH="../lib/:" ./main.o -h
 
 # Contributors
 - [DexrnZacAttack](https://github.com/DexrnZacAttack)
-- [NerdTheNed](https://github.com/NeRdTheNed)
+- [NeRdTheNed](https://github.com/NeRdTheNed)
 - [Zero_DSRS_VX](https://github.com/PhoenixVX)
 - [CarPBon](https://github.com/CarPBon) (For providing ARM hardware to build and test on)
 - [vlOd2](https://github.com/vlOd2)
