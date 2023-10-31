@@ -473,6 +473,35 @@ static void printDecInfo(QmageDecoderInfo decoderInfo) {
     std::cout << "DecoderInfo DecLowInfo qversion: " << getDecoderVersionName(lowInfo.qversion) << "\n";
     std::cout << "DecoderInfo DecLowInfo vversion: " << getVDecoderVersionName(lowInfo.vversion) << "\n";
     std::cout << "DecoderInfo DecLowInfo fversion: " << getFDecoderVersionName(lowInfo.fversion) << "\n";
+#ifdef PRINT_MORE
+    std::cout << "DecoderInfo DecLowInfo Ver200_SPEED: " << lowInfo.Ver200_SPEED << "\n";
+    std::cout << "DecoderInfo DecLowInfo IS_ANIMATION: " << lowInfo.IS_ANIMATION << "\n";
+    std::cout << "DecoderInfo DecLowInfo UseExtraException: " << lowInfo.UseExtraException << "\n";
+    std::cout << "DecoderInfo DecLowInfo tiny: " << lowInfo.tiny << "\n";
+    std::cout << "DecoderInfo DecLowInfo IsDyanmicTable: " << lowInfo.IsDyanmicTable << "\n";
+    std::cout << "DecoderInfo DecLowInfo IsOpaque: " << lowInfo.IsOpaque << "\n";
+    std::cout << "DecoderInfo DecLowInfo NearLossless: " << lowInfo.NearLossless << "\n";
+    std::cout << "DecoderInfo DecLowInfo SIZE_SHIFT: " << lowInfo.SIZE_SHIFT << "\n";
+    std::cout << "DecoderInfo DecLowInfo ANI_RANGE: " << lowInfo.ANI_RANGE << "\n";
+    std::cout << "DecoderInfo DecLowInfo qp: " << lowInfo.qp << "\n";
+    std::cout << "DecoderInfo DecLowInfo mode_bit: " << lowInfo.mode_bit << "\n";
+    std::cout << "DecoderInfo DecLowInfo header_len: " << lowInfo.header_len << "\n";
+    std::cout << "DecoderInfo DecLowInfo NotComp: " << lowInfo.NotComp << "\n";
+    std::cout << "DecoderInfo DecLowInfo NotAlphaComp: " << lowInfo.NotAlphaComp << "\n";
+    std::cout << "DecoderInfo DecLowInfo alpha_decode_flag: " << lowInfo.alpha_decode_flag << "\n";
+    std::cout << "DecoderInfo DecLowInfo depth: " << lowInfo.depth << "\n";
+    std::cout << "DecoderInfo DecLowInfo alpha_depth: " << lowInfo.alpha_depth << "\n";
+    std::cout << "DecoderInfo DecLowInfo rgb_encoder_mode: " << getEncoderCodecName(lowInfo.rgb_encoder_mode) << "\n";
+    std::cout << "DecoderInfo DecLowInfo alpha_encoder_mode: " << getEncoderCodecName(lowInfo.alpha_encoder_mode) << "\n";
+    std::cout << "DecoderInfo DecLowInfo out_type: " << getFormatName(lowInfo.out_type) << "\n";
+
+    Qmage_VDecoderVMODE_T mode = lowInfo.mode;
+
+    std::cout << "DecoderInfo DecLowInfo mode color: " << std::to_string(mode.color) << "\n";
+    std::cout << "DecoderInfo DecLowInfo mode mode: " << std::to_string(mode.mode) << "\n";
+    std::cout << "DecoderInfo DecLowInfo mode animation: " << std::to_string(mode.animation) << "\n";
+    std::cout << "DecoderInfo DecLowInfo mode qp: " << std::to_string(mode.qp) << "\n";
+#endif
 }
 #endif
 
