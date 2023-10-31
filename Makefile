@@ -13,7 +13,7 @@ $(BUILD_DIR)/%.o: %.cpp
 $(BUILD_DIR)/qmdecoder: $(BUILD_DIR)/qmdecoder.o
 	$(CXX) -o $@ $< $(LDFLAGS)
 
-run:
+run: $(BUILD_DIR)/qmdecoder
 	cd ${BUILD_DIR} && LD_LIBRARY_PATH="../lib/:${LD_LIBRARY_PATH}" ./qmdecoder ../examples/bootsamsung.qmg
 
 clean:
