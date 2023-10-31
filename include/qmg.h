@@ -4,17 +4,16 @@
 #include <stdint.h>
 #include <dlfcn.h>
 
-// switch this to typedef when i understand c/c++
-#define QMULONG unsigned long
-#define QMLONG long
-#define QMINT32 int
-#define QMUINT32 unsigned int
+typedef unsigned long QMULONG;
+typedef long QMLONG;
+typedef int QMINT32;
+typedef unsigned int QMUINT32;
 // fix this type
-#define QMUCHAR const char
-#define QMCHAR char
-enum QM_BOOL : int32_t {
-  QM_BOOL_FALSE = 0x0,
-  QM_BOOL_TRUE = 0x1,
+typedef const char QMUCHAR;
+typedef char QMCHAR;
+enum QM_BOOL {
+    QM_BOOL_FALSE,
+    QM_BOOL_TRUE
 };
 
 #include <quram.h>
