@@ -1,14 +1,20 @@
 CXX=g++
-CFLAGS=-Wall -Wextra -Iinclude/ -Llib/ -lQmageDecoder -lm -std=c++17 -Og -fuse-ld=lld
+CXXFLAGS=-Wall -Wextra -Iinclude/ -std=c++17 -Og
+LDFLAGS=-Llib/ -lQmageDecoder -lm -fuse-ld=lld
 BUILD_DIR=bin
 
-%.o: %.cpp
-	$(CXX) -o ${BUILD_DIR}/$@ $< $(CFLAGS)
+all: build
 
-build: main.o
+build: $(BUILD_DIR)/qmdecoder
+
+$(BUILD_DIR)/%.o: %.cpp
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
+
+$(BUILD_DIR)/qmdecoder: $(BUILD_DIR)/qmdecoder.o
+	$(CXX) -o $@ $< $(LDFLAGS)
 
 run:
-	cd ${BUILD_DIR} && LD_LIBRARY_PATH="../lib/:${LD_LIBRARY_PATH}" ./main.o ../examples/bootsamsung.qmg
+	cd ${BUILD_DIR} && LD_LIBRARY_PATH="../lib/:${LD_LIBRARY_PATH}" ./qmdecoder ../examples/bootsamsung.qmg
 
 clean:
-	rm -f ${BUILD_DIR}/main.o
+	rm -f ${BUILD_DIR}/qmdecoder.o ${BUILD_DIR}/qmdecoder

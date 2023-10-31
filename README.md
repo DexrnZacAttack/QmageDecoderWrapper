@@ -30,10 +30,10 @@ make build
 ### To run
 ```bash
 cd bin
-LD_LIBRARY_PATH="../lib/:" ./main.o {args} {filename}
+LD_LIBRARY_PATH="../lib/:" ./qmdecoder {args} {filename}
 # note: args are NOT required to run it, only the filename.
 # you can access the help page by running
-LD_LIBRARY_PATH="../lib/:" ./main.o -h
+LD_LIBRARY_PATH="../lib/:" ./qmdecoder -h
 ```
 <br>
 
@@ -44,4 +44,3 @@ LD_LIBRARY_PATH="../lib/:" ./main.o -h
 - [CarPBon](https://github.com/CarPBon) (For providing ARM hardware to build and test on)
 - [vlOd2](https://github.com/vlOd2)
 - [Boreal](https://github.com/bor-real)
-
