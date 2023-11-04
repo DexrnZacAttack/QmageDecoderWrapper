@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
+/*
 size_t QuramQmage_Fwrite_0(const void *ptr, size_t size, size_t n, FILE* s) {
     return fwrite(ptr, size, n, s);
 }
@@ -69,5 +70,6 @@ void * QuramQmage_Memset(void *dest, QMINT32 c, QMUINT32 count) {
 void * QuramQmage_ReAlloc(void *pMem, QMUINT32 size) {
     return realloc(pMem, size);
 }
+*/
 
 #endif
