@@ -34,7 +34,9 @@ enum QM_BOOL {
 #include <QmageDecoderInfo.h>
 #include <QmageDecoderError.h>
 
+#ifdef __cplusplus
 extern "C" {
+#endif
     QM_BOOL QmageDecVersionCheck(QMUCHAR *pInputStream);
     QmageDecoderError QmageDecGetLastErr(void);
     QMINT32 QmageDecodeFrame(QMUCHAR *pInputStream, QMINT32 input_size, QMUCHAR *pDecbuf);
@@ -57,6 +59,8 @@ extern "C" {
     QM_BOOL QmageDecCommon_WGetDecoderInfo(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
     QM_BOOL QmageDecCommon_VGetDecoderInfo(QMUCHAR *pInputStream, QMINT32 input_size, QmageDecoderInfo *pDecoder_info);
     void QmageDecCommon_SetHeaderFromDecoderInfo(QmageDecoderHeader *pHeader_info, QmageDecoderInfo *pDecoder_info);
+#ifdef __cplusplus
 }
+#endif
 
 #endif
