@@ -92,12 +92,20 @@ static void write_to_mem(void* context, void* data, int size) {
         return;
     }
 
-    image->buff = realloc(image->buff, image->buff_size + size);
+    char* reallocBuf = realloc(image->buff, image->buff_size + size);
 
-    if (image->buff == NULL) {
+    if (reallocBuf == NULL) {
         image->error = true;
+
+        if (image->buff != NULL) {
+            free(image->buff);
+            image->buff = NULL;
+        }
+
         return;
     }
+
+    image->buff = reallocBuf;
 
     memcpy(image->buff + image->buff_size, data, size);
     image->buff_size += size;
