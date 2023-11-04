@@ -92,7 +92,7 @@ static void write_to_mem(void* context, void* data, int size) {
         return;
     }
 
-    char* reallocBuf = realloc(image->buff, image->buff_size + size);
+    char* reallocBuf = (char*) realloc(image->buff, image->buff_size + size);
 
     if (reallocBuf == NULL) {
         image->error = true;
