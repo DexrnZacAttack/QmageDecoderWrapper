@@ -15,11 +15,11 @@ $(BUILD_DIR)/%.o: %.cpp
 $(BUILD_DIR)/%.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(BUILD_DIR)/qmdecoder: $(BUILD_DIR)/qmdecoder.o $(BUILD_DIR)/image_helper.o
+$(BUILD_DIR)/qmdecoder: $(BUILD_DIR)/qmdecoder.o $(BUILD_DIR)/image_helper.o $(BUILD_DIR)/image_writer.o $(BUILD_DIR)/msf_gif.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 run: $(BUILD_DIR)/qmdecoder
 	cd ${BUILD_DIR} && LD_LIBRARY_PATH="../lib/:${LD_LIBRARY_PATH}" ./qmdecoder ../examples/bootsamsung.qmg
 
 clean:
-	rm -f ${BUILD_DIR}/qmdecoder.o $(BUILD_DIR)/image_helper.o ${BUILD_DIR}/qmdecoder
+	rm -f ${BUILD_DIR}/qmdecoder.o $(BUILD_DIR)/image_helper.o $(BUILD_DIR)/image_writer.o $(BUILD_DIR)/msf_gif.o ${BUILD_DIR}/qmdecoder
