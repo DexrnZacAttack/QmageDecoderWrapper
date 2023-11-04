@@ -1,9 +1,13 @@
 #ifndef QMAGEDECODER_IMAGE_WRITER_H
 #define QMAGEDECODER_IMAGE_WRITER_H
 
-#include <string>
+#include <stdbool.h>
+#include <stddef.h>
 
-enum ImageOutputFormat {
+#ifdef __cplusplus
+extern "C" {
+#endif
+typedef enum {
     NONE = -1,
     RAW,
     PNG,
@@ -11,12 +15,15 @@ enum ImageOutputFormat {
     TGA,
     BMP,
     GIF
-};
+} ImageOutputFormat;
 
-std::string getExtensionForOutputFormat(ImageOutputFormat format);
+const char* getExtensionForOutputFormat(ImageOutputFormat format);
 
-bool writeBytesToFile(const char* fileName, char* data, size_t size);
+bool writeBytesToFile(const char* fileName, char* data, size_t size, bool overwrite);
 
-bool writeImageToFile(std::string fileOutName, ImageOutputFormat format, int width, int height, int channels, char* imageData);
+bool writeImageToFile(const char* fileOutName, ImageOutputFormat format, int width, int height, int channels, char* imageData, bool overwrite);
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* QMAGEDECODER_IMAGE_WRITER_H */

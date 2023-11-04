@@ -260,7 +260,7 @@ static bool addFrame(QmageDecoderHeader headerInfo, size_t dimSize, size_t frame
             delete[] gifBuffer;
         }
     } else {
-        returnVal = writeImageToFile(fileOutName, outputFormat, headerInfo.width, headerInfo.height, channels, outBuffer);
+        returnVal = writeImageToFile(fileOutName.c_str(), outputFormat, headerInfo.width, headerInfo.height, channels, outBuffer, true);
     }
 
     if (outBuffer != frameBuffer) {
@@ -631,7 +631,7 @@ cleanup:
         std::string outFileName = filename + ".gif";
         MsfGifResult result = msf_gif_end(&gifState);
 
-        if (result.data && writeBytesToFile(outFileName.c_str(), (char*) result.data, result.dataSize)) {
+        if (result.data && writeBytesToFile(outFileName.c_str(), (char*) result.data, result.dataSize, true)) {
             std::cout << "Successfully wrote gif to " << outFileName << std::endl;
         } else {
             std::cerr << "Error: Could not write gif to " << filename << ".gif" << std::endl;
