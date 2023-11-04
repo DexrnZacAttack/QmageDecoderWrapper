@@ -67,7 +67,25 @@ static bool addFrame(QmageDecoderHeader headerInfo, size_t dimSize, size_t frame
             delete[] gifBuffer;
         }
     } else {
+#ifdef MEM_IMAGE_TEST
+        if (outputFormat == NONE) {
+            returnVal = true;
+        } else if (outputFormat == RAW) {
+            returnVal = writeBytesToFile(fileOutName.c_str(), outBuffer, outBufferSize, true);
+        } else {
+            size_t outsize = 0;
+            char* imageBytes = writeImageToBytes(&outsize, outputFormat, headerInfo.width, headerInfo.height, channels, outBuffer);
+
+            if (imageBytes != NULL) {
+                returnVal = writeBytesToFile(fileOutName.c_str(), imageBytes, outsize, true);
+                free(imageBytes);
+            } else {
+                returnVal = false;
+            }
+        }
+#else
         returnVal = writeImageToFile(fileOutName.c_str(), outputFormat, headerInfo.width, headerInfo.height, channels, outBuffer, true);
+#endif
     }
 
     if (outBuffer != frameBuffer) {
