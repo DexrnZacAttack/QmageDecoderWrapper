@@ -1,6 +1,7 @@
 #include "image_writer.h"
 
 #include "image_helper.h"
+#include "io_helper.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_STATIC
@@ -22,39 +23,6 @@ const char* getExtensionForOutputFormat(ImageOutputFormat format) {
         default:
             return ".raw";
     }
-}
-
-static bool doesFileExist(const char* fileName) {
-    FILE* output_file = fopen(fileName, "rb");
-
-    if (output_file != NULL) {
-        fclose(output_file);
-        return true;
-    }
-
-    return false;
-}
-
-bool writeBytesToFile(const char* fileName, char* data, size_t size, bool overwrite) {
-    if (!overwrite && doesFileExist(fileName)) {
-        return false;
-    }
-
-    FILE* output_file = fopen(fileName, "wb");
-
-    if (output_file == NULL) {
-        return false;
-    }
-
-    bool returnVal = false;
-
-    if (fwrite(data, size, 1, output_file) == 1) {
-        returnVal = true;
-    }
-
-    fclose(output_file);
-
-    return returnVal;
 }
 
 bool writeImageToFile(const char* fileOutName, ImageOutputFormat format, int width, int height, int channels, char* imageData, bool overwrite) {

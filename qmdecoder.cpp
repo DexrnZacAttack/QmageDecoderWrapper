@@ -7,6 +7,7 @@
 
 #include "image_helper.h"
 #include "image_writer.h"
+#include "io_helper.h"
 #include "msf_gif.h"
 
 // Comment this out to only use public functions from libQmageDecoder

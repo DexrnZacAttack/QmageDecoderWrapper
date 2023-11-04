@@ -19,8 +19,6 @@ typedef enum {
 
 const char* getExtensionForOutputFormat(ImageOutputFormat format);
 
-bool writeBytesToFile(const char* fileName, char* data, size_t size, bool overwrite);
-
 bool writeImageToFile(const char* fileOutName, ImageOutputFormat format, int width, int height, int channels, char* imageData, bool overwrite);
 #ifdef __cplusplus
 }
