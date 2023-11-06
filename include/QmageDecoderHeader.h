@@ -17,8 +17,8 @@ struct QmageDecoderHeader {
     // TODO is this placement correct?
     QM_BOOL Unknown;
 #endif
-    QM_BOOL IsOpaque;
 #if LIBRARY_REV > 11
+    QM_BOOL IsOpaque;
     // TODO verify version this was introduced in
     QM_BOOL premultiplied;
     // TODO verify version this was introduced in

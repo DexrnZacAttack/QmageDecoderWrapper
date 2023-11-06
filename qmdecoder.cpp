@@ -167,15 +167,19 @@ static bool printHeaderInfo(const char* buffer, std::streampos size, QmageDecAni
     std::cout << "HeaderInfo mode: " << headerInfo.mode << std::endl;
     std::cout << "HeaderInfo width: " << headerInfo.width << std::endl;
     std::cout << "HeaderInfo height: " << headerInfo.height << std::endl;
+#if LIBRARY_REV > 11
     std::cout << "HeaderInfo padding: " << headerInfo.padding << std::endl;
+#endif
     std::cout << "HeaderInfo raw_type: " << getFormatName(headerInfo.raw_type) << std::endl;
     std::cout << "HeaderInfo transparency: " << headerInfo.transparency << std::endl;
+#if LIBRARY_REV > 11
     std::cout << "HeaderInfo NinePatched: " << headerInfo.NinePatched << std::endl;
     std::cout << "HeaderInfo IsOpaque: " << headerInfo.IsOpaque << std::endl;
     std::cout << "HeaderInfo premultiplied: " << headerInfo.premultiplied << std::endl;
     std::cout << "HeaderInfo ColorCount: " << headerInfo.ColorCount << std::endl;
     std::cout << "HeaderInfo UseIndexedColor: " << headerInfo.UseIndexedColor << std::endl;
     std::cout << "HeaderInfo isGrayColor: " << headerInfo.isGrayColor << std::endl;
+#endif
     std::cout << "HeaderInfo rgba_order: " << headerInfo.rgba_order << std::endl;
     std::cout << "HeaderInfo totalFrameNumber: " << headerInfo.totalFrameNumber << std::endl;
     std::cout << "HeaderInfo currentFrameNumber: " << headerInfo.currentFrameNumber << std::endl;
