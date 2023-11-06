@@ -100,7 +100,9 @@ static void printDecInfo(QmageDecoderInfo decoderInfo) {
     QmageImageInfo imageInfo = decoderInfo.imageInfo;
     std::cout << "\nQmageDecoderHeader" << std::endl;
     std::cout << "DecoderInfo imageInfo bpp: " << imageInfo.bpp << "\n";
+#if LIBRARY_REV > 11
     std::cout << "DecoderInfo imageInfo PaddingValue: " << imageInfo.PaddingValue << "\n";
+#endif
     std::cout << "DecoderInfo imageInfo raw_type: " << getFormatName(imageInfo.raw_type) << "\n";
     std::cout << "DecoderInfo imageInfo img_type: " << imageInfo.img_type << "\n";
     std::cout << "DecoderInfo header_len: " << decoderInfo.header_len << "\n";
@@ -304,12 +306,16 @@ int main(int argc, char* argv[]) {
     // long long int input_size = std::filesystem::file_size(filename);
 #ifdef USE_INTERNAL_FUNCTIONS
     int version = QmageDecCommon_GetVersion();
+#if LIBRARY_REV > 11
     int opaqueInfo = QmageDecCommon_GetOpaqueInfo(filename.c_str());
+#endif
 
     if (verbosityLevel > REALLY_QUIET) {
         // Dexrn: Changed these so that it is more clear that we are talking about the library and not QmageDecoder.
         std::cout << "libQmageDecoder version:" << version << std::endl;
+#if LIBRARY_REV > 11
         std::cout << "libQmageDecoder opaqueInfo:" << opaqueInfo << std::endl;
+#endif
     }
 #endif
 

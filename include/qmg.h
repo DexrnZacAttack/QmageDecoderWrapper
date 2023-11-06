@@ -67,7 +67,9 @@ extern "C" {
 #endif
     QM_BOOL QmageDecGetNinePatchedInfo(QMUCHAR *pInputStream,QMINT32 EncodedSize,QmageNinePatchedChunk *pChunk);
     void QmageDecGetVersion(QMUINT32 *pDecoderVer);
+#if LIBRARY_REV > 11
     QM_BOOL QmageDecOrgOpaqueInfo(QMUCHAR *pInputStream);
+#endif
     QM_BOOL QmageDecParseHeader(QMUCHAR *pInputStream,QmageIOType io_type,QMINT32 input_size, QmageDecoderHeader *pHeader_info);
     QM_BOOL QmageMakeColorTable(QMUCHAR *pInputStream,QMINT32 input_size,QMUINT32 *pColorTable);
 
