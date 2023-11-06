@@ -19,6 +19,10 @@
 #define QMAGE_ANI_SUPPORT
 #endif
 
+#ifndef LIBRARY_REV
+#define LIBRARY_REV 13
+#endif
+
 typedef unsigned long QMULONG;
 typedef long QMLONG;
 typedef int QMINT32;
