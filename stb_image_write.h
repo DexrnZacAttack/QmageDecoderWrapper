@@ -186,11 +186,37 @@ STBIWDEF int stbiw_convert_wchar_to_utf8(char *buffer, size_t bufferlen, const w
 
 typedef void stbi_write_func(void *context, void *data, int size);
 
+typedef struct
+{
+   stbi_write_func *func;
+   void *context;
+   unsigned char buffer[64];
+   int buf_used;
+} stbi__write_context;
+
+typedef struct
+{
+   stbi__write_context write_context;
+   int from_file;
+   int expected_frames;
+   int frame;
+   int uses_default_frame;
+   int wrote_first_frame;
+} stbi_apng_write_context;
+
 STBIWDEF int stbi_write_png_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const void  *data, int stride_in_bytes);
 STBIWDEF int stbi_write_bmp_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const void  *data);
 STBIWDEF int stbi_write_tga_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const void  *data);
 STBIWDEF int stbi_write_hdr_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const float *data);
 STBIWDEF int stbi_write_jpg_to_func(stbi_write_func *func, void *context, int x, int y, int comp, const void  *data, int quality);
+
+#ifndef STBI_WRITE_NO_STDIO
+STBIWDEF int stbi_begin_write_apng(stbi_apng_write_context *apng_context, char const *filename, int x, int y, int comp, int frames, int plays, int is_first_default);
+#endif
+
+STBIWDEF int stbi_begin_write_apng_to_func(stbi_apng_write_context *apng_context, stbi_write_func *func, void *context, int x, int y, int comp, int frames, int plays, int is_first_default);
+STBIWDEF int stbi_write_apng_frame(stbi_apng_write_context *apng_context, int x, int y, int comp, const void *data, int stride_bytes, int delay_num, int delay_den);
+STBIWDEF void stbi_end_write_apng(stbi_apng_write_context *apng_context);
 
 STBIWDEF void stbi_flip_vertically_on_write(int flip_boolean);
 
@@ -263,14 +289,6 @@ STBIWDEF void stbi_flip_vertically_on_write(int flag)
 {
    stbi__flip_vertically_on_write = flag;
 }
-
-typedef struct
-{
-   stbi_write_func *func;
-   void *context;
-   unsigned char buffer[64];
-   int buf_used;
-} stbi__write_context;
 
 // initialize a callback-based context
 static void stbi__start_write_callbacks(stbi__write_context *s, stbi_write_func *c, void *context)
@@ -1071,6 +1089,8 @@ static unsigned int stbiw__crc32(unsigned char *buffer, int len)
 }
 
 #define stbiw__wpng4(o,a,b,c,d) ((o)[0]=STBIW_UCHAR(a),(o)[1]=STBIW_UCHAR(b),(o)[2]=STBIW_UCHAR(c),(o)[3]=STBIW_UCHAR(d),(o)+=4)
+#define stbiw__wpng2(o,a,b) ((o)[0]=STBIW_UCHAR(a),(o)[1]=STBIW_UCHAR(b),(o)+=2)
+#define stbiw__wp16(data,v) stbiw__wpng2(data, (v)>>8,(v));
 #define stbiw__wp32(data,v) stbiw__wpng4(data, (v)>>24,(v)>>16,(v)>>8,(v));
 #define stbiw__wptag(data,s) stbiw__wpng4(data, s[0],s[1],s[2],s[3])
 
@@ -1125,14 +1145,12 @@ static void stbiw__encode_png_line(unsigned char *pixels, int stride_bytes, int 
    }
 }
 
-STBIWDEF unsigned char *stbi_write_png_to_mem(const unsigned char *pixels, int stride_bytes, int x, int y, int n, int *out_len)
+static unsigned char *stbi__encode_png_idat(const unsigned char *pixels, int stride_bytes, int x, int y, int n, int *zlen)
 {
    int force_filter = stbi_write_force_png_filter;
-   int ctype[5] = { -1, 0, 4, 2, 6 };
-   unsigned char sig[8] = { 137,80,78,71,13,10,26,10 };
-   unsigned char *out,*o, *filt, *zlib;
+   unsigned char *filt, *zlib;
    signed char *line_buffer;
-   int j,zlen;
+   int j;
 
    if (stride_bytes == 0)
       stride_bytes = x * n;
@@ -1173,8 +1191,19 @@ STBIWDEF unsigned char *stbi_write_png_to_mem(const unsigned char *pixels, int s
       STBIW_MEMMOVE(filt+j*(x*n+1)+1, line_buffer, x*n);
    }
    STBIW_FREE(line_buffer);
-   zlib = stbi_zlib_compress(filt, y*( x*n+1), &zlen, stbi_write_png_compression_level);
+   zlib = stbi_zlib_compress(filt, y*( x*n+1), zlen, stbi_write_png_compression_level);
    STBIW_FREE(filt);
+   return zlib;
+}
+
+STBIWDEF unsigned char *stbi_write_png_to_mem(const unsigned char *pixels, int stride_bytes, int x, int y, int n, int *out_len)
+{
+   int ctype[5] = { -1, 0, 4, 2, 6 };
+   unsigned char sig[8] = { 137,80,78,71,13,10,26,10 };
+   unsigned char *out,*o, *zlib;
+   int zlen;
+
+   zlib = stbi__encode_png_idat(pixels, stride_bytes, x, y, n, &zlen);
    if (!zlib) return 0;
 
    // each tag requires 12 bytes of overhead
@@ -1238,6 +1267,156 @@ STBIWDEF int stbi_write_png_to_func(stbi_write_func *func, void *context, int x,
    return 1;
 }
 
+/*
+ * APNG writer
+ */
+
+static int stbi_write_apng_header(stbi__write_context *s, int x, int y, int n, int frames, int plays)
+{
+   int ctype[5] = { -1, 0, 4, 2, 6 };
+
+   // PNG header
+   unsigned char sig[8] = { 137,80,78,71,13,10,26,10 };
+   s->func(s->context, sig, 8);
+
+   // IHDR
+   unsigned char ihdr[12 + 13];
+   unsigned char* o = ihdr;
+   stbiw__wp32(o, 13); // header length
+   stbiw__wptag(o, "IHDR");
+   stbiw__wp32(o, x);
+   stbiw__wp32(o, y);
+   *o++ = 8;
+   *o++ = STBIW_UCHAR(ctype[n]);
+   *o++ = 0;
+   *o++ = 0;
+   *o++ = 0;
+   stbiw__wpcrc(&o,13);
+   s->func(s->context, ihdr, 12 + 13);
+
+   // acTL
+   unsigned char actl[12 + 8];
+   o = actl;
+   stbiw__wp32(o, 8); // header length
+   stbiw__wptag(o, "acTL");
+   stbiw__wp32(o, frames);
+   stbiw__wp32(o, plays);
+   stbiw__wpcrc(&o,8);
+   s->func(s->context, actl, 12 + 8);
+
+   return 1;
+}
+
+#ifndef STBI_WRITE_NO_STDIO
+STBIWDEF int stbi_begin_write_apng(stbi_apng_write_context *apng_context, char const *filename, int x, int y, int comp, int frames, int plays, int is_first_default)
+{
+   apng_context->expected_frames = frames;
+   apng_context->frame = 0;
+   apng_context->uses_default_frame = is_first_default;
+   apng_context->from_file = 1;
+   apng_context->wrote_first_frame = 0;
+   if (stbi__start_write_file(&apng_context->write_context,filename)) {
+      return stbi_write_apng_header(&apng_context->write_context, x, y, comp, frames, plays);
+   } else
+      return 0;
+}
+#endif
+
+STBIWDEF int stbi_begin_write_apng_to_func(stbi_apng_write_context *apng_context, stbi_write_func *func, void *context, int x, int y, int comp, int frames, int plays, int is_first_default)
+{
+   apng_context->expected_frames = frames;
+   apng_context->frame = 0;
+   apng_context->uses_default_frame = is_first_default;
+   apng_context->from_file = 0;
+   apng_context->wrote_first_frame = 0;
+   stbi__start_write_callbacks(&apng_context->write_context, func, context);
+   return stbi_write_apng_header(&apng_context->write_context, x, y, comp, frames, plays);
+}
+
+STBIWDEF int stbi_write_apng_frame(stbi_apng_write_context *apng_context, int x, int y, int comp, const void *data, int stride_bytes, int delay_num, int delay_den)
+{
+   unsigned char *out, *o, *zlib;
+   int is_default_frame, seq_number, zlen;
+
+   is_default_frame = !apng_context->wrote_first_frame && apng_context->uses_default_frame;
+   seq_number = apng_context->frame * 2;
+
+   if (apng_context->wrote_first_frame && !apng_context->uses_default_frame) {
+      seq_number--;
+   }
+
+   zlib = stbi__encode_png_idat((const unsigned char *) data, stride_bytes, x, y, comp, &zlen);
+   if (!zlib) return 0;
+
+   size_t extra_size = apng_context->wrote_first_frame ? 4 : 0;
+   size_t dat_size = 12+zlen+extra_size;
+   out = (unsigned char *) STBIW_MALLOC(dat_size);
+   if (!out) {
+      STBIW_FREE(zlib);
+      return 0;
+   }
+
+   if (!is_default_frame) {
+      unsigned char fctl[12 + 26];
+      o = fctl;
+      stbiw__wp32(o, 26); // header length
+      stbiw__wptag(o, "fcTL");
+      stbiw__wp32(o, seq_number);
+      stbiw__wp32(o, x);
+      stbiw__wp32(o, y);
+      // x offset
+      stbiw__wp32(o, 0);
+      // y offset
+      stbiw__wp32(o, 0);
+      stbiw__wp16(o, delay_num);
+      stbiw__wp16(o, delay_den);
+      // dispose operation
+      *o++ = 1;
+      // blend operation
+      *o++ = 0;
+      stbiw__wpcrc(&o,26);
+      apng_context->write_context.func(apng_context->write_context.context, fctl, 12 + 26);
+   }
+
+   o=out;
+
+   stbiw__wp32(o, zlen + extra_size);
+   if (!apng_context->wrote_first_frame) {
+      stbiw__wptag(o, "IDAT");
+   } else {
+      stbiw__wptag(o, "fdAT");
+      stbiw__wp32(o, seq_number + 1);
+   }
+   STBIW_MEMMOVE(o, zlib, zlen);
+   o += zlen;
+   STBIW_FREE(zlib);
+   stbiw__wpcrc(&o, zlen + extra_size);
+
+   apng_context->write_context.func(apng_context->write_context.context, out, dat_size);
+
+   STBIW_FREE(out);
+
+   if (!is_default_frame) {
+      apng_context->frame++;
+   }
+
+   if (!apng_context->wrote_first_frame) {
+      apng_context->wrote_first_frame = 1;
+   }
+
+   return 1;
+}
+
+STBIWDEF void stbi_end_write_apng(stbi_apng_write_context *apng_context)
+{
+   unsigned char iend[12] = { 0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 };
+   apng_context->write_context.func(apng_context->write_context.context, iend, 12);
+#ifndef STBI_WRITE_NO_STDIO
+   if (apng_context->from_file) {
+      stbi__end_write_file(&apng_context->write_context);
+   }
+#endif
+}
 
 /* ***************************************************************************
  *

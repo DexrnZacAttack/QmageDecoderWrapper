@@ -14,7 +14,8 @@ typedef enum {
     JPG,
     TGA,
     BMP,
-    GIF
+    GIF,
+    APNG
 } ImageOutputFormat;
 
 const char* getExtensionForOutputFormat(ImageOutputFormat format);

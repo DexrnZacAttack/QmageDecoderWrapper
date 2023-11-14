@@ -4,13 +4,14 @@
 #include "io_helper.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#define STB_IMAGE_WRITE_STATIC
+//#define STB_IMAGE_WRITE_STATIC
 #include "msf_gif.h"
 #include "stb_image_write.h"
 
 const char* getExtensionForOutputFormat(ImageOutputFormat format) {
     switch (format) {
         case PNG:
+        case APNG:
             return ".png";
         case JPG:
             return ".jpg";
@@ -67,6 +68,7 @@ bool writeImageToFile(const char* fileOutName, ImageOutputFormat format, int wid
             return returnVal;
         }
         case PNG:
+        case APNG:
             return stbi_write_png(fileOutName, width, height, channels, imageData, width * channels);
         case JPG:
             return stbi_write_jpg(fileOutName, width, height, channels, imageData, 90);
@@ -159,7 +161,8 @@ char* writeImageToBytes(size_t* outsize, ImageOutputFormat format, int width, in
             return gifOutput;
         }
 
-        case PNG: {
+        case PNG:
+        case APNG: {
             mem_image image = {};
 
             if (stbi_write_png_to_func(write_to_mem, &image, width, height, channels, imageData, width * channels) && !image.error) {

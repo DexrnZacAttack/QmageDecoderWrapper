@@ -10,6 +10,9 @@
 #include "io_helper.h"
 #include "msf_gif.h"
 #include "qmage_helper.h"
+#include "stb_image_write.h"
+
+#define APNG_END_STR "-apng.png"
 
 // Comment this out to only use public functions from libQmageDecoder
 #define USE_INTERNAL_FUNCTIONS
@@ -29,7 +32,7 @@ enum Verbosity {
 };
 
 // Either add a frame to an animated gif, or write it to a file
-static bool addFrame(QmageDecoderHeader headerInfo, size_t dimSize, size_t frameSize, int stride, bool needsConvert, QmageRawImageType convertedType, ImageOutputFormat outputFormat, MsfGifState* gifState, int delay, const char* frameBuffer, std::string fileOutName) {
+static bool addFrame(QmageDecoderHeader headerInfo, size_t dimSize, size_t frameSize, int stride, bool needsConvert, QmageRawImageType convertedType, ImageOutputFormat outputFormat, MsfGifState* gifState, int delay, stbi_apng_write_context* apngContext, const char* frameBuffer, std::string fileOutName) {
     if (outputFormat == NONE) {
         return true;
     }
@@ -66,6 +69,8 @@ static bool addFrame(QmageDecoderHeader headerInfo, size_t dimSize, size_t frame
         if ((char*) gifBuffer != outBuffer) {
             delete[] gifBuffer;
         }
+    } else if (outputFormat == APNG) {
+        returnVal = stbi_write_apng_frame(apngContext, headerInfo.width, headerInfo.height, channels, outBuffer, headerInfo.width * channels, 16, 1000);
     } else {
 #ifdef MEM_IMAGE_TEST
         if (outputFormat == NONE) {
@@ -231,7 +236,7 @@ int main(int argc, char* argv[]) {
             std::cout << "Usage: " << argv[0] << " [options] <file>" << std::endl;
             std::cout << "Options:" << std::endl;
             std::cout << "  -h, --help: Display this help message" << std::endl;
-            std::cout << "  -f, --format: Outputs the frames in the format specified.\n  Supported formats are: raw, png (default), jpg, tga, bmp, and animated gif." << std::endl;
+            std::cout << "  -f, --format: Outputs the frames in the format specified.\n  Supported formats are: raw, png (default), apng, jpg, tga, bmp, and animated gif." << std::endl;
             std::cout << "  -q, --quiet: Doesn't stdcout every written file." << std::endl;  // Dexrn: I'm sure I could phrase this better lmao
             std::cout << "  -Q, --really-quiet: Doesn't stdcout anything." << std::endl;
             std::cout << "  -v, --verbose: Print additional information about each frame during decoding." << std::endl;
@@ -255,6 +260,8 @@ int main(int argc, char* argv[]) {
                     outputFormat = BMP;
                 } else if (format == "gif") {
                     outputFormat = GIF;
+                } else if (format == "apng") {
+                    outputFormat = APNG;
                 } else {
                     std::cerr << "Error: Unknown format specified: " << format << std::endl;
                     return 1;
@@ -325,7 +332,9 @@ int main(int argc, char* argv[]) {
     size_t dimSize = 0;
     size_t frameSize = 0;
     int stride = 0;
+    QmageRawImageType convertedType;
     MsfGifState gifState = {};
+    stbi_apng_write_context apngContext = {};
 
     // Read the header
     QM_BOOL hasHeaderInfo = QmageDecParseHeader(buffer, QM_IO_BUFFER, fileSize, &headerInfo);
@@ -363,10 +372,17 @@ int main(int argc, char* argv[]) {
     stride = typeToBits(headerInfo.raw_type) / 8;
     frameSize = dimSize * stride;
     frameBuffer = new char[frameSize];
+    convertedType = getConvertedType(headerInfo.raw_type);
 
     if (outputFormat == GIF) {
         if (!msf_gif_begin(&gifState, headerInfo.width, headerInfo.height)) {
             std::cerr << "Error: Could not create gif encoding context" << std::endl;
+            returnVal = 1;
+            goto cleanup;
+        }
+    } else if (outputFormat == APNG) {
+        if (!stbi_begin_write_apng(&apngContext, (filename + APNG_END_STR).c_str(), headerInfo.width, headerInfo.height, typeToBits(convertedType) / 8, headerInfo.totalFrameNumber, 0, 0)) {
+            std::cerr << "Error: Could not create APNG encoding context" << std::endl;
             returnVal = 1;
             goto cleanup;
         }
@@ -375,7 +391,6 @@ int main(int argc, char* argv[]) {
     {
         // NedTheNerd: TODO: Allow configuring this
         // Dexrn: Did it.
-        QmageRawImageType convertedType = getConvertedType(headerInfo.raw_type);
         bool needsConvert = (outputFormat > RAW) && (headerInfo.raw_type != convertedType);
 
         if (needsConvert && (verbosityLevel > REALLY_QUIET)) {
@@ -406,15 +421,15 @@ int main(int argc, char* argv[]) {
                 int fileNum = i + 1;
                 std::string fileOutName = filename + "_frame-" + std::to_string(fileNum) + getExtensionForOutputFormat(outputFormat);
 
-                if (!addFrame(headerInfo, dimSize, frameSize, stride, needsConvert, convertedType, outputFormat, &gifState, 0, frameBuffer, fileOutName)) {
-                    if (outputFormat == GIF) {
+                if (!addFrame(headerInfo, dimSize, frameSize, stride, needsConvert, convertedType, outputFormat, &gifState, 0, &apngContext, frameBuffer, fileOutName)) {
+                    if (outputFormat == GIF || outputFormat == APNG) {
                         std::cerr << "Error: Could not write frame " << fileNum << std::endl;
                     } else {
                         std::cerr << "Error: Could not write frame " << fileNum << " to file " << fileOutName << std::endl;
                     }
                     returnVal = 1;
                 } else if (verbosityLevel > QUIET && outputFormat != NONE) {
-                    if (outputFormat == GIF) {
+                    if (outputFormat == GIF || outputFormat == APNG) {
                         std::cout << "Wrote frame " << fileNum << std::endl;
                     } else {
                         std::cout << "Wrote frame " << fileNum << " to \"" << fileOutName << "\"" << std::endl;
@@ -439,15 +454,15 @@ int main(int argc, char* argv[]) {
             int fileNum = 1;
             std::string fileOutName = filename + "_frame-" + std::to_string(fileNum) + getExtensionForOutputFormat(outputFormat);
 
-            if (!addFrame(headerInfo, dimSize, frameSize, stride, needsConvert, convertedType, outputFormat, &gifState, 0, frameBuffer, fileOutName)) {
-                if (outputFormat == GIF) {
+            if (!addFrame(headerInfo, dimSize, frameSize, stride, needsConvert, convertedType, outputFormat, &gifState, 0, &apngContext, frameBuffer, fileOutName)) {
+                if (outputFormat == GIF || outputFormat == APNG) {
                     std::cerr << "Error: Could not write frame " << fileNum << std::endl;
                 } else {
                     std::cerr << "Error: Could not write frame " << fileNum << " to file " << fileOutName << std::endl;
                 }
                 returnVal = 1;
             } else if (verbosityLevel > QUIET && outputFormat != NONE) {
-                if (outputFormat == GIF) {
+                if (outputFormat == GIF || outputFormat == APNG) {
                     std::cout << "Wrote frame " << fileNum << std::endl;
                 } else {
                     std::cout << "Wrote frame " << fileNum << " to \"" << fileOutName << "\"" << std::endl;
@@ -474,6 +489,9 @@ cleanup:
         }
 
         msf_gif_free(result);
+    } else if (outputFormat == APNG) {
+        stbi_end_write_apng(&apngContext);
+        std::cout << "Successfully wrote APNG to " << filename << APNG_END_STR << std::endl;
     }
 
     if (aniInfo != nullptr) {

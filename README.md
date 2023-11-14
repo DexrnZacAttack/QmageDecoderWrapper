@@ -45,3 +45,7 @@ LD_LIBRARY_PATH="../lib/:" ./qmdecoder -h
 - [CarPBon](https://github.com/CarPBon) (For providing ARM hardware to build and test on)
 - [vlOd2](https://github.com/vlOd2)
 - [Boreal](https://github.com/bor-real) ("He did nothing though" -Boreal)
+
+# Libraries
+- [stb_image_write.h](https://github.com/NeRdTheNed/stb/tree/apng-writer) - header only image encoder, modified to add APNG support
+- [msf_gif.h](https://github.com/notnullnotvoid/msf_gif) - header only gif encoder
