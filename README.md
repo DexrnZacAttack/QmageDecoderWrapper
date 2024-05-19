@@ -1,6 +1,6 @@
 <img src="QMGDecoderIcon.png" width="256" height="256"></img>
-# QmageDecoder
-### A project to hopefully decode and convert QMG files.
+# QmageDecoderWrapper
+### A wrapper for libQmageDecoder and partially libSkia, allows for QMG file decoding. 
 <br>
 
 # Setup
@@ -42,9 +42,9 @@ LD_LIBRARY_PATH="../lib/:" ./qmdecoder -h
 - [NeRdTheNed](https://github.com/NeRdTheNed)
 - [Zero_DSRS_VX](https://github.com/PhoenixVX)
 - [GenericPnPMonitor](https://github.com/genericpnpmonit0r)
-- [CarPBon](https://github.com/CarPBon) (For providing ARM hardware to build and test on)
-- [vlOd2](https://github.com/vlOd2)
-- [Boreal](https://github.com/bor-real) ("He did nothing though" -Boreal)
+- [CarPBon](https://github.com/CarPBon) - Providing ARM hardware to build and test on
+- [vlOd2](https://github.com/vlOd2) - Making C# header parser
+- [Boreal](https://github.com/bor-real) - Renamed some files (lol)
 
 # Libraries
 - [stb_image_write.h](https://github.com/NeRdTheNed/stb/tree/apng-writer) - header only image encoder, modified to add APNG support
