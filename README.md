@@ -1,19 +1,15 @@
-<img src="QMGDecoderIcon.png" width="256" height="256"></img>
-# QmageDecoderWrapper
+# <img src="QMGDecoderIcon.png" width="32" height="32"> QmageDecoderWrapper
 ### A wrapper for libQmageDecoder and partially libSkia, allows for QMG file decoding. 
-<br>
-
-# Setup
 ## Setting up the Docker Container.
-### You need a docker container to run ARMv7 on x86 (or if you are using a native ARM machine you probably don't need a docker container)
-### The recommended distro for this would be Alpine
+You need a docker container to run ARMv7 on x86 (or if you are using a native ARM machine you probably don't need a docker container)  
+The recommended distro for this would be Alpine
 ```bash
 docker pull --platform linux/arm/v7 alpine:latest
 docker run --privileged --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined -v .:/qmg -it alpine:latest
 apk add make gcc g++ lld
 cd qmg
 ```
-### You can also use Debian, but you'd need to patch the libQmageDecoder.so
+You can also use Debian, but you'd need to patch the libQmageDecoder.so
 ```bash
 docker pull --platform linux/arm/v7 debian:latest
 docker run --privileged --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined -v .:/qmg -it debian:latest
