@@ -1,4 +1,7 @@
 # <img src="QMGDecoderIcon.png" width="32" height="32"> QmageDecoderWrapper
+> [!NOTE]
+> This entire codebase will probably be thrown out and rewritten now that I have actual C++ experience.
+
 ### A wrapper for libQmageDecoder and partially libSkia, allows for QMG file decoding. 
 ## Setting up the Docker Container.
 You need a docker container to run ARMv7 on x86 (or if you are using a native ARM machine you probably don't need a docker container)  
